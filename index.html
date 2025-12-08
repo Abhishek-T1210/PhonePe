@@ -155,6 +155,31 @@
       margin-top: 8px;
     }
 
+    /* Auto-detected OTP Banner (Like Real PhonePe) */
+    .auto-otp-banner {
+      background: #E8F5E9;
+      border: 1.5px solid #4CAF50;
+      color: #1B5E20;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 30px;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.4s ease;
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+    }
+    .auto-otp-banner.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .auto-otp-banner:hover {
+      background: #DCF7E0;
+    }
+
     /* OTP Screen */
     .otp-screen {
       display: none;
@@ -170,7 +195,7 @@
     .otp-subtitle {
       font-size: 14.5px;
       color: #555;
-      margin-bottom: 32px;
+      margin-bottom: 20px;
     }
     .otp-subtitle span { font-weight: 600; color: #000; }
 
@@ -189,13 +214,27 @@
       font-weight: 700;
       text-align: center;
       outline: none;
-      transition: all 0.25s ease;
+      transition: all 0.3s ease;
       background: #FAFAFA;
     }
     .otp-inputs input:focus {
       border-color: #68217A;
       box-shadow: 0 0 0 4px rgba(104,33,122,0.18);
       background: #FFFFFF;
+    }
+
+    /* Success State - Green Border Glow */
+    .otp-inputs input.success {
+      border-color: #4CAF50 !important;
+      background: #E8F5E9 !important;
+      box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.25);
+      animation: successPulse 0.6s ease-out;
+    }
+
+    @keyframes successPulse {
+      0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
     }
 
     .otp-actions {
@@ -212,41 +251,6 @@
       transition: opacity 0.2s;
     }
     .resend-link:hover, .wrong-number:hover { opacity: 0.8; }
-
-    /* Professional Green Success Toast */
-    .success-toast {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.8);
-      background: #FFFFFF;
-      color: #000;
-      padding: 24px 40px;
-      border-radius: 20px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.22);
-      z-index: 9999;
-      opacity: 0;
-      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-      text-align: center;
-      border: 2px solid #4CAF50;
-    }
-    .success-toast.show {
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 1;
-    }
-    .success-toast::before {
-      content: "✓";
-      display: block;
-      font-size: 48px;
-      color: #4CAF50;
-      margin-bottom: 12px;
-      font-weight: bold;
-    }
-    .success-toast span {
-      font-size: 18px;
-      font-weight: 600;
-      color: #000;
-    }
 
     /* Footer */
     .footer-terms {
@@ -289,7 +293,7 @@
     <img src="phonepe_logo.png" alt="PhonePe">
   </div>
 
-  <!-- SMS Toast -->
+  <!-- SMS Toast (Hidden in OTP screen, just for realism) -->
   <div class="sms-notification" id="smsNotification">
     Your verification code is <strong id="otpDisplay">281469</strong><br>
     <span class="expiry">Your code expires in 10 minutes.</span>
@@ -328,6 +332,12 @@
         <div class="otp-title">Enter OTP</div>
         <p class="otp-subtitle">Sent to <span id="otpNumber">+91 xxxxx xxxxx</span></p>
 
+        <!-- Auto-Detected OTP Banner -->
+        <div class="auto-otp-banner" id="autoOtpBanner">
+          OTP detected: <strong id="bannerOtp">123456</strong> <br>
+          <small style="font-weight:500;opacity:0.9;">Tap to auto-fill</small>
+        </div>
+
         <div class="otp-inputs">
           <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit">
           <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit">
@@ -352,11 +362,6 @@
     </div>
   </div>
 
-  <!-- Beautiful Success Toast -->
-  <div class="success-toast" id="successToast">
-    <span>Login Successful</span>
-  </div>
-
   <script>
     const phoneInput = document.getElementById('phoneInput');
     const proceedBtn = document.getElementById('proceedBtn');
@@ -364,22 +369,23 @@
     const otpScreen = document.getElementById('otpScreen');
     const smsNotification = document.getElementById('smsNotification');
     const otpDisplay = document.getElementById('otpDisplay');
+    const bannerOtp = document.getElementById('bannerOtp');
+    const autoOtpBanner = document.getElementById('autoOtpBanner');
     const otpNumber = document.getElementById('otpNumber');
     const otpInputs = document.querySelectorAll('.otp-digit');
     const resendText = document.getElementById('resendText');
     const wrongNumber = document.getElementById('wrongNumber');
-    const successToast = document.getElementById('successToast');
 
     let currentOTP = '';
 
-    // Generate Random 6-digit OTP
     function generateOTP() {
       return Math.floor(100000 + Math.random() * 900000).toString();
     }
 
-    // Start with fresh OTP
+    // Initial OTP
     currentOTP = generateOTP();
 
+    // Phone number input validation
     phoneInput.addEventListener('input', () => {
       let num = phoneInput.value.replace(/\D/g, '').slice(0, 10);
       phoneInput.value = num;
@@ -387,17 +393,25 @@
       proceedBtn.classList.toggle('active', num.length === 10);
     });
 
+    // Proceed to OTP screen
     proceedBtn.addEventListener('click', () => {
       if (phoneInput.value.length === 10) {
         currentOTP = generateOTP();
         otpDisplay.textContent = currentOTP;
+        bannerOtp.textContent = currentOTP;
         otpNumber.textContent = `+91 ${phoneInput.value.slice(0,5)} ${phoneInput.value.slice(5)}`;
 
         loginScreen.style.display = 'none';
         otpScreen.style.display = 'block';
 
+        // Show SMS toast
         smsNotification.classList.add('show');
-        setTimeout(() => smsNotification.classList.remove('show'), 10000);
+        setTimeout(() => smsNotification.classList.remove('show'), 8000);
+
+        // Show auto-OTP banner after delay (like real app)
+        setTimeout(() => {
+          autoOtpBanner.classList.add('show');
+        }, 1500);
 
         startResendTimer();
         otpInputs.forEach(input => input.value = '');
@@ -405,20 +419,24 @@
       }
     });
 
-    // OTP Input Handling
+    // Auto-fill OTP when banner is clicked
+    autoOtpBanner.addEventListener('click', () => {
+      for (let i = 0; i < 6; i++) {
+        otpInputs[i].value = currentOTP[i];
+      }
+      checkOTP(); // Trigger success if correct
+      autoOtpBanner.classList.remove('show');
+    });
+
+    // Manual OTP input handling
     otpInputs.forEach((input, i) => {
       input.addEventListener('input', () => {
         if (input.value.length === 1 && i < 5) {
           otpInputs[i + 1].focus();
         }
-        if ([...otpInputs].map(x => x.value).join('') === currentOTP) {
-          successToast.classList.add('show');
-          setTimeout(() => {
-            successToast.classList.remove('show');
-            // window.location.href = "home.html";
-          }, 2000);
-        }
+        checkOTP();
       });
+
       input.addEventListener('keydown', e => {
         if (e.key === 'Backspace' && !input.value && i > 0) {
           otpInputs[i - 1].focus();
@@ -426,7 +444,20 @@
       });
     });
 
-    // Resend OTP (Now Works!)
+    // Check if OTP and apply green success animation
+    function checkOTP() {
+      const entered = [...otpInputs].map(x => x.value).join('');
+      if (entered.length === 6 && entered === currentOTP) {
+        otpInputs.forEach(input => {
+          input.classList.add('success');
+          input.disabled = true;
+        });
+        // Optional: redirect after delay
+        // setTimeout(() => window.location.href = "home.html", 1500);
+      }
+    }
+
+    // Resend OTP
     function startResendTimer() {
       let t = 10;
       const interval = setInterval(() => {
@@ -443,17 +474,27 @@
     window.resendOTP = function() {
       currentOTP = generateOTP();
       otpDisplay.textContent = currentOTP;
+      bannerOtp.textContent = currentOTP;
+
       smsNotification.classList.add('show');
-      setTimeout(() => smsNotification.classList.remove('show'), 10000);
-      otpInputs.forEach(i => i.value = '');
+      setTimeout(() => smsNotification.classList.remove('show'), 8000);
+
+      setTimeout(() => autoOtpBanner.classList.add('show'), 1500);
+
+      otpInputs.forEach((input, i) => {
+        input.value = '';
+        input.classList.remove('success');
+        input.disabled = false;
+      });
       otpInputs[0].focus();
       startResendTimer();
     };
 
+    // Wrong number - go back
     wrongNumber.onclick = () => {
       otpScreen.style.display = 'none';
       loginScreen.style.display = 'block';
-      otpInputs.forEach(i => i.value = '');
+      autoOtpBanner.classList.remove('show');
       phoneInput.focus();
     };
   </script>
