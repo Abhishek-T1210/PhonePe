@@ -27,7 +27,7 @@
       z-index: 100;
       box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     }
-    .header img { height: 110px; }
+    .header img { height: 44px; }
 
     /* Main Wrapper */
     .wrapper {
@@ -119,7 +119,7 @@
       box-shadow: 0 4px 14px rgba(104,33,122,0.35);
     }
 
-    /* SMS Toast */
+    /* Real PhonePe SMS Toast */
     .sms-notification {
       position: fixed;
       top: 90px;
@@ -198,18 +198,18 @@
       background: #FFFFFF;
     }
 
-    /* Success State - Green Glow Green */
+    /* Success Animation - Green Glow when OTP correct */
     .otp-inputs input.success {
       border-color: #4CAF50 !important;
       background: #E8F5E9 !important;
       box-shadow: 0 0 0 5px rgba(76, 175, 80, 0.3);
-      animation: successPulse 0.7s ease-out;
+      animation: successPulse 0.8s ease-out;
     }
 
     @keyframes successPulse {
-      0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.5); }
-      70% { box-shadow: 0 0 0 12px rgba(76, 175, 80, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+      0% { box-shadow: 0 0 0 0 rgba(76,175,80,0.5); }
+      70% { box-shadow: 0 0 0 14px rgba(76,175,80,0); }
+      100% { box-shadow: 0 0 0 0 rgba(76,175,80,0); }
     }
 
     .otp-actions {
@@ -223,7 +223,9 @@
       color: #68217A;
       font-weight: 600;
       cursor: pointer;
+      transition: opacity 0.2s;
     }
+    .resend-link:hover, .wrong-number:hover { opacity: 0.8; }
 
     /* Footer */
     .footer-terms {
@@ -288,6 +290,7 @@
           <input
             type="tel"
             inputmode="numeric"
+            pattern="[0-9]*"
             class="phone-input"
             placeholder="Mobile Number"
             maxlength="10"
@@ -342,6 +345,7 @@
 
     let currentOTP = '';
 
+    // Generate Random 6-digit OTP
     function generateOTP() {
       return Math.floor(100000 + Math.random() * 900000).toString();
     }
@@ -373,21 +377,22 @@
       }
     });
 
-    // Manual OTP typing only
+    // Manual OTP Input Only
     otpInputs.forEach((input, i) => {
       input.addEventListener('input', () => {
         if (input.value.length === 1 && i < 5) {
           otpInputs[i + 1].focus();
         }
 
+        // Check if all 6 digits entered and correct
         const enteredOTP = [...otpInputs].map(x => x.value).join('');
         if (enteredOTP.length === 6 && enteredOTP === currentOTP) {
           otpInputs.forEach(box => {
             box.classList.add('success');
             box.disabled = true;
           });
-          // Optional: redirect after 1.5s
-          // setTimeout(() => location.href = "home.html", 1500);
+          // Optional: redirect after success
+          // setTimeout(() => location.href = "dashboard.html", 1500);
         }
       });
 
