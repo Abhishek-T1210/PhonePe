@@ -4,105 +4,131 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>PhonePe</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      height: 100%;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #FFFFFF;
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #FAFAFA;
+      height: 100vh;
       overflow: hidden;
+    }
+
+    /* Status Bar Simulation */
+    .status-bar {
+      height: 44px;
+      background: #68217A;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      font-size: 15px;
+      font-weight: 500;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
     }
 
     /* Header */
     .header {
+      height: 56px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
       position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 70px;
-      background: #FFFFFF;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      top: 44px; left: 0; right: 0;
+      z-index: 999;
     }
-    .header img { height: 44px; }
+    .back-btn { font-size: 24px; cursor: pointer; }
+    .title { font-weight: 600; font-size: 17px; }
+    .help { font-size: 20px; }
 
-    /* Main Wrapper */
-    .wrapper {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      padding-top: 70px;
-      padding-bottom: 70px;
-    }
-
-    .content {
-      flex: 1;
-      padding: 40px 24px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      max-width: 360px;
+    /* Main Content */
+    .container {
+      padding: 120px 24px 40px;
+      max-width: 400px;
       margin: 0 auto;
+      text-align: center;
     }
 
-    .title {
-      font-size: 26px;
+    .main-title {
+      font-size: 24px;
       font-weight: 700;
       color: #1A1A1A;
-      text-align: center;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
     .subtitle {
       font-size: 15px;
       color: #666;
-      text-align: center;
-      margin-bottom: 40px;
       line-height: 1.5;
+      margin-bottom: 50px;
     }
 
-    /* Phone Input */
-    .input-box {
-      width: 100%;
-      height: 56px;
-      background: #F9F5FF;
-      border: 1.8px solid #68217A;
-      border-radius: 12px;
+    /* 4-Digit Passcode Input (Real PhonePe Style) */
+    .pin-container {
+      position: relative;
       display: flex;
+      justify-content: center;
       align-items: center;
-      padding: 0 16px;
-      margin-bottom: 40px;
+      margin-bottom: 50px;
+    }
+
+    .pin-dots {
+      display: flex;
+      gap: 20px;
+    }
+
+    .pin-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #E0E0E0;
       transition: all 0.3s ease;
     }
-    .input-box:focus-within {
-      box-shadow: 0 0 0 4px rgba(104,33,122,0.18);
-      border-color: #68217A;
-    }
-    .flag-code {
-      display: flex;
-      align-items: center;
-      margin-right: 12px;
-      pointer-events: none;
-    }
-    .flag-code img { width: 28px; height: 20px; margin-right: 8px; border-radius: 4px; }
-    .flag-code span { font-size: 17px; font-weight: 600; color: #68217A; }
 
-    .phone-input {
-      flex: 1;
-      border: none;
-      background: transparent;
-      font-size: 17px;
+    .pin-dot.filled {
+      background: #68217A;
+    }
+
+    .pin-dot.success {
+      background: #4CAF50;
+      box-shadow: 0 0 0 6px rgba(76, 175, 80, 0.25);
+      animation: successPulse 0.6s ease-out;
+    }
+
+    @keyframes successPulse {
+      0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
+      70% { box-shadow: 0 0 0 12px rgba(76, 175, 80, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+    }
+
+    /* Hidden Input */
+    #pinInput {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      top: 0; left: 0;
+      cursor: pointer;
+    }
+
+    .refresh-icon {
+      position: absolute;
+      right: -50px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
       color: #68217A;
-      outline: none;
-      caret-color: #68217A;
     }
-    .phone-input::placeholder { color: #B08DD6; }
 
+    /* Proceed Button */
     .proceed-btn {
       width: 100%;
-      height: 54px;
+      height: 50px;
       background: #E5E5E5;
       color: #999;
       font-size: 17px;
@@ -111,172 +137,31 @@
       border-radius: 12px;
       cursor: not-allowed;
       transition: all 0.3s ease;
+      margin-bottom: 40px;
     }
     .proceed-btn.active {
       background: #68217A;
-      color: #FFFFFF;
+      color: white;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(104,33,122,0.35);
     }
 
-    /* Real PhonePe SMS Toast */
-    .sms-notification {
-      position: fixed;
-      top: 90px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-160%);
-      background: #FFFFFF;
-      color: #000;
-      padding: 18px 24px;
-      border-radius: 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      max-width: 90%;
-      width: 340px;
-      text-align: center;
+    /* Alternative Link */
+    .alt-link {
       font-size: 15px;
-      line-height: 1.6;
-      z-index: 999;
-      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-      opacity: 0;
-    }
-    .sms-notification.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-    .sms-notification strong {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: #000;
-    }
-    .sms-notification .expiry {
-      color: #666;
-      font-size: 13.5px;
-      margin-top: 8px;
-    }
-
-    /* Auto-detected OTP Banner (Like Real PhonePe) */
-    .auto-otp-banner {
-      background: #E8F5E9;
-      border: 1.5px solid #4CAF50;
-      color: #1B5E20;
-      padding: 14px 20px;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 600;
-      text-align: center;
-      margin-bottom: 30px;
-      cursor: pointer;
-      opacity: 0;
-      transform: translateY(-20px);
-      transition: all 0.4s ease;
-      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
-    }
-    .auto-otp-banner.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .auto-otp-banner:hover {
-      background: #DCF7E0;
-    }
-
-    /* OTP Screen */
-    .otp-screen {
-      display: none;
-      width: 100%;
-      text-align: center;
-    }
-    .otp-title {
-      font-size: 23px;
-      font-weight: 600;
-      margin-bottom: 12px;
-      color: #1A1A1A;
-    }
-    .otp-subtitle {
-      font-size: 14.5px;
-      color: #555;
-      margin-bottom: 20px;
-    }
-    .otp-subtitle span { font-weight: 600; color: #000; }
-
-    .otp-inputs {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      margin-bottom: 30px;
-    }
-    .otp-inputs input {
-      width: 52px;
-      height: 58px;
-      border: 2px solid #E0E0E0;
-      border-radius: 12px;
-      font-size: 24px;
-      font-weight: 700;
-      text-align: center;
-      outline: none;
-      transition: all 0.3s ease;
-      background: #FAFAFA;
-    }
-    .otp-inputs input:focus {
-      border-color: #68217A;
-      box-shadow: 0 0 0 4px rgba(104,33,122,0.18);
-      background: #FFFFFF;
-    }
-
-    /* Success State - Green Border Glow */
-    .otp-inputs input.success {
-      border-color: #4CAF50 !important;
-      background: #E8F5E9 !important;
-      box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.25);
-      animation: successPulse 0.6s ease-out;
-    }
-
-    @keyframes successPulse {
-      0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
-      70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
-    }
-
-    .otp-actions {
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      color: #666;
-      padding: 0 10px;
-    }
-    .resend-link, .wrong-number {
       color: #68217A;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s;
+      text-decoration: underline;
+      font-weight: 500;
     }
-    .resend-link:hover, .wrong-number:hover { opacity: 0.8; }
 
-    /* Footer */
-    .footer-terms {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: #FFFFFF;
-      padding: 16px 24px;
-      text-align: center;
-      font-size: 12.8px;
-      color: #777;
-      line-height: 1.5;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
-      z-index: 90;
-    }
-    .footer-terms a { color: #68217A; text-decoration: none; font-weight: 500; }
-
+    /* Desktop Block */
     .desktop-block {
       display: none;
       position: fixed; inset: 0; background: #68217A; color: white;
       align-items: center; justify-content: center; text-align: center;
       z-index: 9999; padding: 40px; flex-direction: column; gap: 20px;
     }
-    .desktop-block img { width: 90px; filter: brightness(0) invert(1); }
-
     @media (min-width: 768px) {
-      .wrapper, .header { display: none; }
+      body > *:not(.desktop-block) { display: none; }
       .desktop-block { display: flex; }
     }
   </style>
@@ -284,219 +169,119 @@
 <body>
 
   <div class="desktop-block">
-    <img src="https://www.phonepe.com/web-static/img/phonepe_logo.svg" alt="PhonePe">
     <h1>Desktop Not Supported</h1>
-    <p>Please open on your mobile phone</p>
+    <p>Please use your mobile phone</p>
   </div>
 
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div>2:52</div>
+    <div>Signal Wi-Fi Battery</div>
+  </div>
+
+  <!-- Header -->
   <div class="header">
-    <img src="phonepe_logo.png" alt="PhonePe">
+    <div class="back-btn">Back</div>
+    <div class="title">Continue with PhonePe</div>
+    <div class="help">?</div>
   </div>
 
-  <!-- SMS Toast (Hidden in OTP screen, just for realism) -->
-  <div class="sms-notification" id="smsNotification">
-    Your verification code is <strong id="otpDisplay">281469</strong><br>
-    <span class="expiry">Your code expires in 10 minutes.</span>
-  </div>
+  <div class="container">
+    <h1 class="main-title">Verify your mobile number</h1>
+    <p class="subtitle">
+      This verifies your identity and helps you securely log in to PhonePe
+    </p>
 
-  <div class="wrapper">
-    <div class="content">
+    <h2 style="text-align:left; font-size:18px; margin:30px 0 16px; font-weight:600;">
+      Enter 4-digit passcode
+    </h2>
 
-      <!-- Login Screen -->
-      <div id="loginScreen">
-        <h1 class="title">Enter mobile number</h1>
-        <p class="subtitle">We will create an account if you don't have one.</p>
-
-        <div class="input-box" onclick="document.getElementById('phoneInput').focus()">
-          <div class="flag-code">
-            <img src="https://flagcdn.com/in.svg" alt="India">
-            <span>+91</span>
-          </div>
-          <input
-            type="tel"
-            inputmode="numeric"
-            pattern="[0-9]*"
-            class="phone-input"
-            placeholder="Mobile Number"
-            maxlength="10"
-            id="phoneInput"
-            autocomplete="off"
-          >
-        </div>
-
-        <button class="proceed-btn" id="proceedBtn" disabled>PROCEED</button>
+    <div class="pin-container">
+      <div class="pin-dots" id="pinDots">
+        <div class="pin-dot"></div>
+        <div class="pin-dot"></div>
+        <div class="pin-dot"></div>
+        <div class="pin-dot"></div>
       </div>
-
-      <!-- OTP Screen -->
-      <div class="otp-screen" id="otpScreen">
-        <div class="otp-title">Enter OTP</div>
-        <p class="otp-subtitle">Sent to <span id="otpNumber">+91 xxxxx xxxxx</span></p>
-
-        <!-- Auto-Detected OTP Banner -->
-        <div class="auto-otp-banner" id="autoOtpBanner">
-          OTP detected: <strong id="bannerOtp">123456</strong> <br>
-          <small style="font-weight:500;opacity:0.9;">Tap to auto-fill</small>
-        </div>
-
-        <div class="otp-inputs">
-          <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit">
-          <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit">
-          <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit">
-          <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit">
-          <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit">
-          <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit">
-        </div>
-
-        <div class="otp-actions">
-          <span id="resendText">Resend OTP in <strong>10s</strong></span>
-          <span class="wrong-number" id="wrongNumber">Wrong number?</span>
-        </div>
-      </div>
-
+      <input type="tel" inputmode="numeric" maxlength="4" id="pinInput" autocomplete="off">
+      <div class="refresh-icon">Refresh</div>
     </div>
 
-    <div class="footer-terms">
-      By proceeding, you are agreeing to PhonePe's
-      <a href="#">Privacy Policy</a> and
-      <a href="#">Terms & Conditions</a>
+    <button class="proceed-btn" id="proceedBtn" disabled>PROCEED</button>
+
+    <div>
+      <a href="#" class="alt-link">Unable to send PIN? Try another way.</a>
     </div>
   </div>
 
   <script>
-    const phoneInput = document.getElementById('phoneInput');
-    const proceedBtn = document.getElementById('proceedBtn');
-    const loginScreen = document.getElementById('loginScreen');
-    const otpScreen = document.getElementById('otpScreen');
-    const smsNotification = document.getElementById('smsNotification');
-    const otpDisplay = document.getElementById('otpDisplay');
-    const bannerOtp = document.getElementById('bannerOtp');
-    const autoOtpBanner = document.getElementById('autoOtpBanner');
-    const otpNumber = document.getElementById('otpNumber');
-    const otpInputs = document.querySelectorAll('.otp-digit');
-    const resendText = document.getElementById('resendText');
-    const wrongNumber = document.getElementById('wrongNumber');
+    const pinInput = document.getElementById('pinInput');
+    pinDots = document.querySelectorAll('.pin-dot');
+    proceedBtn = document.getElementById('proceedBtn');
 
-    let currentOTP = '';
+    // Hardcoded correct PIN (change as needed)
+    const correctPIN = "1234";
 
-    function generateOTP() {
-      return Math.floor(100000 + Math.random() * 900000).toString();
-    }
+    pinInput.addEventListener('input', () => {
+      const value = pinInput.value.replace(/\D/g, '').slice(0,4);
+      pinInput.value = value;
 
-    // Initial OTP
-    currentOTP = generateOTP();
-
-    // Phone number input validation
-    phoneInput.addEventListener('input', () => {
-      let num = phoneInput.value.replace(/\D/g, '').slice(0, 10);
-      phoneInput.value = num;
-      proceedBtn.disabled = num.length !== 10;
-      proceedBtn.classList.toggle('active', num.length === 10);
-    });
-
-    // Proceed to OTP screen
-    proceedBtn.addEventListener('click', () => {
-      if (phoneInput.value.length === 10) {
-        currentOTP = generateOTP();
-        otpDisplay.textContent = currentOTP;
-        bannerOtp.textContent = currentOTP;
-        otpNumber.textContent = `+91 ${phoneInput.value.slice(0,5)} ${phoneInput.value.slice(5)}`;
-
-        loginScreen.style.display = 'none';
-        otpScreen.style.display = 'block';
-
-        // Show SMS toast
-        smsNotification.classList.add('show');
-        setTimeout(() => smsNotification.classList.remove('show'), 8000);
-
-        // Show auto-OTP banner after delay (like real app)
-        setTimeout(() => {
-          autoOtpBanner.classList.add('show');
-        }, 1500);
-
-        startResendTimer();
-        otpInputs.forEach(input => input.value = '');
-        otpInputs[0].focus();
-      }
-    });
-
-    // Auto-fill OTP when banner is clicked
-    autoOtpBanner.addEventListener('click', () => {
-      for (let i = 0; i < 6; i++) {
-        otpInputs[i].value = currentOTP[i];
-      }
-      checkOTP(); // Trigger success if correct
-      autoOtpBanner.classList.remove('show');
-    });
-
-    // Manual OTP input handling
-    otpInputs.forEach((input, i) => {
-      input.addEventListener('input', () => {
-        if (input.value.length === 1 && i < 5) {
-          otpInputs[i + 1].focus();
-        }
-        checkOTP();
-      });
-
-      input.addEventListener('keydown', e => {
-        if (e.key === 'Backspace' && !input.value && i > 0) {
-          otpInputs[i - 1].focus();
-        }
-      });
-    });
-
-    // Check if OTP and apply green success animation
-    function checkOTP() {
-      const entered = [...otpInputs].map(x => x.value).join('');
-      if (entered.length === 6 && entered === currentOTP) {
-        otpInputs.forEach(input => {
-          input.classList.add('success');
-          input.disabled = true;
-        });
-        // Optional: redirect after delay
-        // setTimeout(() => window.location.href = "home.html", 1500);
-      }
-    }
-
-    // Resend OTP
-    function startResendTimer() {
-      let t = 10;
-      const interval = setInterval(() => {
-        t--;
-        if (t > 0) {
-          resendText.innerHTML = `Resend OTP in <strong>${t}s</strong>`;
+      // Update dots
+      pinDots.forEach((dot, i) => {
+        if (i < value.length) {
+          dot.classList.add('filled');
         } else {
-          resendText.innerHTML = `<span class="resend-link" onclick="resendOTP()">Resend OTP</span>`;
-          clearInterval(interval);
+          dot.classList.remove('filled');
         }
-      }, 1000);
-    }
-
-    window.resendOTP = function() {
-      currentOTP = generateOTP();
-      otpDisplay.textContent = currentOTP;
-      bannerOtp.textContent = currentOTP;
-
-      smsNotification.classList.add('show');
-      setTimeout(() => smsNotification.classList.remove('show'), 8000);
-
-      setTimeout(() => autoOtpBanner.classList.add('show'), 1500);
-
-      otpInputs.forEach((input, i) => {
-        input.value = '';
-        input.classList.remove('success');
-        input.disabled = false;
       });
-      otpInputs[0].focus();
-      startResendTimer();
-    };
 
-    // Wrong number - go back
-    wrongNumber.onclick = () => {
-      otpScreen.style.display = 'none';
-      loginScreen.style.display = 'block';
-      autoOtpBanner.classList.remove('show');
-      phoneInput.focus();
-    };
+      // Enable button only when 4 digits
+      proceedBtn.disabled = value.length !== 4;
+      proceedBtn.classList.toggle('active', value.length === 4);
+
+      // Check if correct
+      if (value.length === 4) {
+        if (value === correctPIN) {
+          // Success: turn dots green with pulse
+          pinDots.forEach(dot => {
+            dot.classList.remove('filled');
+            dot.classList.add('success');
+          });
+          proceedBtn.classList.add('active');
+          // Optional redirect after delay
+          // setTimeout(() => location.href = "home.html", 1200);
+        } else {
+          // Wrong PIN: shake animation
+          document.querySelector('.pin-container').style.animation = 'shake 0.5s';
+          setTimeout(() => {
+            pinInput.value = '';
+            pinDots.forEach(d => d.classList.remove('filled', 'success'));
+            proceedBtn.disabled = true;
+            proceedBtn.classList.remove('active');
+            document.querySelector('.pin-container').style.animation = '';
+          }, 600);
+        }
+      }
+    });
+
+    // Focus input when clicking anywhere on container
+    document.querySelector('.pin-container').addEventListener('click', () => {
+      pinInput.focus();
+    });
+
+    // Shake animation
+    const shakeKeyframes = `
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20% { transform: translateX(-10px); }
+        40% { transform: translateX(10px); }
+        60% { transform: translateX(-10px); }
+        80% { transform: translateX(10px); }
+      }
+    `;
+    const style = document.createElement('style');
+    style.textContent = shakeKeyframes;
+    document.head.appendChild(style);
   </script>
 </body>
 </html>
