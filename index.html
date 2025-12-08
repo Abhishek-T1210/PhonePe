@@ -15,7 +15,6 @@
       overflow: hidden;
     }
 
-    /* Header */
     .header {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -26,31 +25,8 @@
       justify-content: center;
       z-index: 100;
       box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-      padding: 0 16px;
     }
     .header img { height: 110px; }
-
-    /* Back Arrow - Only visible on OTP screen */
-    .back-arrow {
-      position: absolute;
-      left: 16px;
-      font-size: 26px;
-      font-weight: bold;
-      color: #000000;
-      cursor: pointer;
-      display: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      align-items: center;
-      justify-content: center;
-      z-index: 101;
-    }
-    .back-arrow
-    .back-arrow.show {
-      display: flex;
-    }
-    .back-arrow:hover { background: #f5f5f5; }
 
     .wrapper {
       display: flex;
@@ -71,8 +47,20 @@
       width: 100%;
     }
 
-    .title { font-size: 26px; font-weight: 700; color: #1A1A1A; text-align: center; margin-bottom: 12px; }
-    .subtitle { font-size: 15px; color: #666; text-align: center; margin-bottom: 40px; line-height: 1.5; }
+    .title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #1A1A1A;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .subtitle {
+      font-size: 15px;
+      color: #666;
+      text-align: center;
+      margin-bottom: 40px;
+      line-height: 1.5;
+    }
 
     .input-box {
       width: 100%;
@@ -87,9 +75,16 @@
       transition: all 0.3s ease;
       cursor: text;
     }
-    .input-box:focus-within { box-shadow: 0 0 0 4px rgba(104,33,122,0.18); border-color: #68217A; }
-
-    .flag-code { display: flex; align-items: center; margin-right: 12px; pointer-events: none; }
+    .input-box:focus-within {
+      box-shadow: 0 0 0 4px rgba(104,33,122,0.18);
+      border-color: #68217A;
+    }
+    .flag-code {
+      display: flex;
+      align-items: center;
+      margin-right: 12px;
+      pointer-events: none;
+    }
     .flag-code img { width: 28px; height: 20px; margin-right: 8px; border-radius: 4px; }
     .flag-code span { font-size: 17px; font-weight: 600; color: #68217A; }
 
@@ -102,14 +97,14 @@
       outline: none;
       caret-color: #68217A;
     }
-    .phone-input::placeholder { 
-      color: #B08DD6; }
+    .phone-input::placeholder { color: #B08DD6; }
+
     .bottom-proceed {
       position: fixed;
       bottom: 70px;
       left: 0;
       right: 0;
-      padding: 0px;
+      padding: 0;
       z-index: 90;
     }
     .proceed-btn {
@@ -150,13 +145,38 @@
       transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.1);
       opacity: 0;
     }
-    .sms-notification.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    .sms-notification strong { font-size: 22px; font-weight: 700; letter-spacing: 2px; color: #000; }
-    .sms-notification .expiry { color: #666; font-size: 13.5px; margin-top: 8px; }
+    .sms-notification.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .sms-notification strong {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #000;
+    }
+    .sms-notification .expiry {
+      color: #666;
+      font-size: 13.5px;
+      margin-top: 8px;
+    }
 
-    .otp-screen { display: none; width: 100%; text-align: center; }
-    .otp-title { font-size: 23px; font-weight: 600; margin-bottom: 12px; color: #1A1A1A; }
-    .otp-subtitle { font-size: 14.5px; color: #555; margin-bottom: 32px; }
+    .otp-screen {
+      display: none;
+      width: 100%;
+      text-align: center;
+    }
+    .otp-title {
+      font-size: 23px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #1A1A1A;
+    }
+    .otp-subtitle {
+      font-size: 14.5px;
+      color: #555;
+      margin-bottom: 32px;
+    }
     .otp-subtitle span { font-weight: 600; color: #000; }
 
     .otp-inputs {
@@ -165,7 +185,6 @@
       justify-content: center;
       margin-bottom: 30px;
     }
-    
     .otp-inputs input {
       width: 52px;
       height: 58px;
@@ -183,12 +202,14 @@
       box-shadow: 0 0 0 4px rgba(104,33,122,0.18);
       background: #FFFFFF;
     }
+
     .otp-inputs input.success {
       border-color: #4CAF50 !important;
       background: #E8F5E9 !important;
       box-shadow: 0 0 0 5px rgba(76, 175, 80, 0.3);
       animation: successPulse 0.8s ease-out;
     }
+
     @keyframes successPulse {
       0% { box-shadow: 0 0 0 0 rgba(76,175,80,0.5); }
       70% { box-shadow: 0 0 0 14px rgba(76,175,80,0); }
@@ -202,7 +223,11 @@
       color: #666;
       padding: 0 10px;
     }
-    .resend-link, .wrong-number { color: #68217A; font-weight: 600; cursor: pointer; }
+    .resend-link, .wrong-number {
+      color: #68217A;
+      font-weight: 600;
+      cursor: pointer;
+    }
 
     .footer-terms {
       position: fixed;
@@ -240,13 +265,10 @@
     <p>Please open on your mobile phone</p>
   </div>
 
-  <!-- Header with Back Arrow -->
   <div class="header">
-    <div class="back-arrow" id="backArrow">Back Arrow</div>
     <img src="phonepe_logo.png" alt="PhonePe">
   </div>
 
-  <!-- SMS Toast -->
   <div class="sms-notification" id="smsNotification">
     Your verification code is <strong id="otpDisplay">281469</strong><br>
     <span class="expiry">Your code expires in 10 minutes.</span>
@@ -255,7 +277,6 @@
   <div class="wrapper">
     <div class="content">
 
-      <!-- Phone Number Screen -->
       <div id="loginScreen">
         <h1 class="title">Enter mobile number</h1>
         <p class="subtitle">We will create an account if you don't have one.</p>
@@ -265,11 +286,18 @@
             <img src="https://flagcdn.com/in.svg" alt="India">
             <span>+91</span>
           </div>
-          <input type="tel" inputmode="numeric" class="phone-input" placeholder="Mobile Number" maxlength="10" id="phoneInput" autocomplete="off">
+          <input
+            type="tel"
+            inputmode="numeric"
+            class="phone-input"
+            placeholder="Mobile Number"
+            maxlength="10"
+            id="phoneInput"
+            autocomplete="off"
+          >
         </div>
       </div>
 
-      <!-- OTP Screen -->
       <div class="otp-screen" id="otpScreen">
         <div class="otp-title">Enter OTP</div>
         <p class="otp-subtitle">Sent to <span id="otpNumber">+91 xxxxx xxxxx</span></p>
@@ -292,12 +320,10 @@
     </div>
   </div>
 
-  <!-- Bottom PROCEED Button -->
   <div class="bottom-proceed" id="bottomProceed">
     <button class="proceed-btn" id="proceedBtn" disabled>PROCEED</button>
   </div>
 
-  <!-- Footer -->
   <div class="footer-terms">
     By proceeding, you are agreeing to PhonePe's
     <a href="#">Privacy Policy</a> and
@@ -317,7 +343,6 @@
     const resendText = document.getElementById('resendText');
     const wrongNumber = document.getElementById('wrongNumber');
     const bottomProceed = document.getElementById('bottomProceed');
-    const backArrow = document.getElementById('backArrow');
 
     let currentOTP = '';
 
@@ -327,18 +352,25 @@
 
     currentOTP = generateOTP();
 
-    // Auto-close keyboard after 10 digits
+    // Main Feature: Auto-close keyboard after 10 digits
     phoneInput.addEventListener('input', () => {
       let num = phoneInput.value.replace(/\D/g, '').slice(0, 10);
       phoneInput.value = num;
+
       proceedBtn.disabled = num.length !== 10;
       proceedBtn.classList.toggle('active', num.length === 10);
-      if (num.length === 10) phoneInput.blur();
+
+      // Auto-close keyboard when 10 digits are entered
+      if (num.length === 10) {
+        phoneInput.blur(); // This closes the keyboard
+      }
     });
 
-    inputBox.addEventListener('click', () => phoneInput.focus());
+    // Re-open keyboard when user taps the input box
+    inputBox.addEventListener('click', () => {
+      phoneInput.focus();
+    });
 
-    // Go to OTP Screen
     proceedBtn.addEventListener('click', () => {
       if (phoneInput.value.length === 10) {
         currentOTP = generateOTP();
@@ -348,7 +380,6 @@
         loginScreen.style.display = 'none';
         otpScreen.style.display = 'block';
         bottomProceed.style.display = 'none';
-        backArrow.classList.add('show'); // Show back arrow only now
 
         smsNotification.classList.add('show');
         setTimeout(() => smsNotification.classList.remove('show'), 10000);
@@ -359,25 +390,11 @@
       }
     });
 
-    // Back Arrow - Go back to phone number screen
-    backArrow.addEventListener('click', () => {
-      otpScreen.style.display = 'none';
-      loginScreen.style.display = 'block';
-      bottomProceed.style.display = 'block';
-      backArrow.classList.remove('show'); // Hide arrow when going back
-
-      otpInputs.forEach(input => {
-        input.value = '';
-        input.classList.remove('success');
-        input.disabled = false;
-      });
-      phoneInput.focus();
-    });
-
-    // OTP Logic
     otpInputs.forEach((input, i) => {
       input.addEventListener('input', () => {
-        if (input.value.length === 1 && i < 5) otpInputs[i + 1].focus();
+        if (input.value.length === 1 && i < 5) {
+          otpInputs[i + 1].focus();
+        }
 
         const enteredOTP = [...otpInputs].map(x => x.value).join('');
         if (enteredOTP.length === 6 && enteredOTP === currentOTP) {
@@ -424,9 +441,17 @@
       startResendTimer();
     };
 
-    // Wrong number uses same back logic
-    wrongNumber.onclick = () => backArrow.click();
+    wrongNumber.onclick = () => {
+      otpScreen.style.display = 'none';
+      loginScreen.style.display = 'block';
+      bottomProceed.style.display = 'block';
+      otpInputs.forEach(i => {
+        i.value = '';
+        i.classList.remove('success');
+        i.disabled = false;
+      });
+      phoneInput.focus();
+    };
   </script>
 </body>
 </html>
-
