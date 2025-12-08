@@ -15,10 +15,11 @@
       overflow: hidden;
     }
 
+    /* Fixed Header - Proper Size */
     .header {
       position: fixed;
       top: 0; left: 0; right: 0;
-      height: 70px;
+      height: 80px;           /* Increased to fit logo */
       background: #FFFFFF;
       display: flex;
       align-items: center;
@@ -26,13 +27,17 @@
       z-index: 100;
       box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     }
-    .header img { height: 110px; }
+    .header img { 
+      height: 110px;           /* Perfect PhonePe logo size */
+      width: auto;
+    }
 
+    /* Main Wrapper - Starts BELOW header */
     .wrapper {
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      padding-top: 70px;
+      padding-top: 80px;      /* Matches header height */
       padding-bottom: 70px;
     }
 
@@ -73,8 +78,10 @@
       border: none; border-radius: 12px; cursor: not-allowed;
       transition: all 0.3s ease;
     }
-    .proceed-btn.active { background: #68217A; color: #FFFFFF; cursor: pointer;
-      box-shadow: 0 4px 14px rgba(104,33,122,0.35); }
+    .proceed-btn.active { 
+      background: #68217A; color: #FFFFFF; cursor: pointer;
+      box-shadow: 0 4px 14px rgba(104,33,122,0.35); 
+    }
 
     /* SMS Toast */
     .sms-notification {
@@ -106,18 +113,10 @@
     }
     .otp-inputs input:focus { border-color: #68217A; box-shadow: 0 0 0 4px rgba(104,33,122,0.18); background: #FFFFFF; }
 
-    /* Paste OTP Button - EXACTLY LIKE PHONEPE */
     .paste-otp-btn {
-      background: #68217A;
-      color: white;
-      border: none;
-      padding: 14px 20px;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-bottom: 30px;
-      box-shadow: 0 4px 12px rgba(104,33,122,0.3);
+      background: #68217A; color: white; border: none; padding: 14px 20px;
+      border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer;
+      margin-bottom: 30px; box-shadow: 0 4px 12px rgba(104,33,122,0.3);
       transition: all 0.2s;
     }
     .paste-otp-btn:active { transform: scale(0.96); }
@@ -127,7 +126,6 @@
     }
     .resend-link, .wrong-number { color: #68217A; font-weight: 600; cursor: pointer; }
 
-    /* Success Toast */
     .success-toast {
       position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
       background: #FFFFFF; color: #000; padding: 28px 40px; border-radius: 20px;
@@ -146,9 +144,11 @@
     }
     .footer-terms a { color: #68217A; text-decoration: none; font-weight: 500; }
 
-    .desktop-block { display: none; position: fixed; inset: 0; background: #68217A; color: white;
+    .desktop-block { 
+      display: none; position: fixed; inset: 0; background: #68217A; color: white;
       align-items: center; justify-content: center; text-align: center; z-index: 9999;
-      padding: 40px; flex-direction: column; gap: 20px; }
+      padding: 40px; flex-direction: column; gap: 20px; 
+    }
     .desktop-block img { width: 90px; filter: brightness(0) invert(1); }
 
     @media (min-width: 768px) { .wrapper, .header { display: none; } .desktop-block { display: flex; } }
@@ -203,7 +203,6 @@
           <input type="tel" inputmode="numeric" maxlength="1" class="otp-digit">
         </div>
 
-        <!-- AUTO PASTE OTP BUTTON - REAL PHONEPE STYLE -->
         <button class="paste-otp-btn" id="pasteOtpBtn">
           Paste OTP <strong id="pastedOtp">281469</strong>
         </button>
@@ -270,20 +269,16 @@
 
         startResendTimer();
         otpInputs.forEach(i => i.value = '');
-        setTimeout(() => pasteOtpBtn.style.opacity = '1', 800); // Show paste button
+        pasteOtpBtn.style.opacity = '1';
       }
     });
 
-    // ONE TAP AUTO FILL
     pasteOtpBtn.addEventListener('click', () => {
       const digits = currentOTP.split('');
-      otpInputs.forEach((input, i) => {
-        input.value = digits[i];
-      });
+      otpInputs.forEach((input, i) => input.value = digits[i]);
       setTimeout(() => checkOTP(), 300);
     });
 
-    // Manual entry
     otpInputs.forEach((input, i) => {
       input.addEventListener('input', () => {
         if (input.value && i < 5) otpInputs[i + 1].focus();
@@ -298,10 +293,7 @@
       const entered = [...otpInputs].map(x => x.value).join('');
       if (entered === currentOTP) {
         successToast.classList.add('show');
-        setTimeout(() => {
-          successToast.classList.remove('show');
-          // window.location.href = "home.html";
-        }, 2000);
+        setTimeout(() => successToast.classList.remove('show'), 2000);
       }
     }
 
@@ -338,4 +330,3 @@
   </script>
 </body>
 </html>
-
