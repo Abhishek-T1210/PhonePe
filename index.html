@@ -15,7 +15,6 @@
       overflow: hidden;
     }
 
-    /* Header */
     .header {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -29,13 +28,12 @@
     }
     .header img { height: 110px; }
 
-    /* Main Wrapper */
     .wrapper {
       display: flex;
       flex-direction: column;
       min-height: 100vh;
       padding-top: 70px;
-      padding-bottom: 140px; /* Space for fixed button + footer */
+      padding-bottom: 140px;
     }
 
     .content {
@@ -64,7 +62,6 @@
       line-height: 1.5;
     }
 
-    /* Phone Input */
     .input-box {
       width: 100%;
       height: 56px;
@@ -76,6 +73,7 @@
       padding: 0 16px;
       margin-bottom: 32px;
       transition: all 0.3s ease;
+      cursor: text;
     }
     .input-box:focus-within {
       box-shadow: 0 0 0 4px rgba(104,33,122,0.18);
@@ -101,13 +99,12 @@
     }
     .phone-input::placeholder { color: #B08DD6; }
 
-    /* Fixed Bottom Proceed Button */
     .bottom-proceed {
       position: fixed;
-      bottom: 70px; /* Above footer */
+      bottom: 70px;
       left: 0;
       right: 0;
-      padding: 0 0px;
+      padding: 0;
       z-index: 90;
     }
     .proceed-btn {
@@ -118,19 +115,17 @@
       font-size: 17px;
       font-weight: 600;
       border: none;
-      border-radius: 0px;
+      border-radius: 0;
       cursor: not-allowed;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
     }
     .proceed-btn.active {
       background: #68217A;
       color: #FFFFFF;
       cursor: pointer;
-      box-shadow: 0 8px 20px rgba(104,33,122,0.4);
+      box-shadow: 0 8px 25px rgba(104,33,122,0.45);
     }
 
-    /* SMS Toast */
     .sms-notification {
       position: fixed;
       top: 90px;
@@ -166,7 +161,6 @@
       margin-top: 8px;
     }
 
-    /* OTP Screen */
     .otp-screen {
       display: none;
       width: 100%;
@@ -209,7 +203,6 @@
       background: #FFFFFF;
     }
 
-    /* Success Green Glow */
     .otp-inputs input.success {
       border-color: #4CAF50 !important;
       background: #E8F5E9 !important;
@@ -236,7 +229,6 @@
       cursor: pointer;
     }
 
-    /* Footer */
     .footer-terms {
       position: fixed;
       bottom: 0; left: 0; right: 0;
@@ -277,7 +269,6 @@
     <img src="phonepe_logo.png" alt="PhonePe">
   </div>
 
-  <!-- SMS Toast -->
   <div class="sms-notification" id="smsNotification">
     Your verification code is <strong id="otpDisplay">281469</strong><br>
     <span class="expiry">Your code expires in 10 minutes.</span>
@@ -286,12 +277,11 @@
   <div class="wrapper">
     <div class="content">
 
-      <!-- Login Screen -->
       <div id="loginScreen">
         <h1 class="title">Enter mobile number</h1>
         <p class="subtitle">We will create an account if you don't have one.</p>
 
-        <div class="input-box" onclick="document.getElementById('phoneInput').focus()">
+        <div class="input-box" id="inputBox">
           <div class="flag-code">
             <img src="https://flagcdn.com/in.svg" alt="India">
             <span>+91</span>
@@ -306,10 +296,8 @@
             autocomplete="off"
           >
         </div>
-        <!-- Button moved to bottom -->
       </div>
 
-      <!-- OTP Screen -->
       <div class="otp-screen" id="otpScreen">
         <div class="otp-title">Enter OTP</div>
         <p class="otp-subtitle">Sent to <span id="otpNumber">+91 xxxxx xxxxx</span></p>
@@ -332,12 +320,10 @@
     </div>
   </div>
 
-  <!-- Fixed Bottom Proceed Button (Only on Login Screen) -->
   <div class="bottom-proceed" id="bottomProceed">
     <button class="proceed-btn" id="proceedBtn" disabled>PROCEED</button>
   </div>
 
-  <!-- Footer -->
   <div class="footer-terms">
     By proceeding, you are agreeing to PhonePe's
     <a href="#">Privacy Policy</a> and
@@ -346,6 +332,7 @@
 
   <script>
     const phoneInput = document.getElementById('phoneInput');
+    const inputBox = document.getElementById('inputBox');
     const proceedBtn = document.getElementById('proceedBtn');
     const loginScreen = document.getElementById('loginScreen');
     const otpScreen = document.getElementById('otpScreen');
@@ -365,15 +352,25 @@
 
     currentOTP = generateOTP();
 
-    // Phone number input
+    // Main Feature: Auto-close keyboard after 10 digits
     phoneInput.addEventListener('input', () => {
       let num = phoneInput.value.replace(/\D/g, '').slice(0, 10);
       phoneInput.value = num;
+
       proceedBtn.disabled = num.length !== 10;
       proceedBtn.classList.toggle('active', num.length === 10);
+
+      // Auto-close keyboard when 10 digits are entered
+      if (num.length === 10) {
+        phoneInput.blur(); // This closes the keyboard
+      }
     });
 
-    // Proceed to OTP
+    // Re-open keyboard when user taps the input box
+    inputBox.addEventListener('click', () => {
+      phoneInput.focus();
+    });
+
     proceedBtn.addEventListener('click', () => {
       if (phoneInput.value.length === 10) {
         currentOTP = generateOTP();
@@ -382,7 +379,7 @@
 
         loginScreen.style.display = 'none';
         otpScreen.style.display = 'block';
-        bottomProceed.style.display = 'none'; // Hide button on OTP screen
+        bottomProceed.style.display = 'none';
 
         smsNotification.classList.add('show');
         setTimeout(() => smsNotification.classList.remove('show'), 10000);
@@ -393,7 +390,6 @@
       }
     });
 
-    // OTP Input Logic
     otpInputs.forEach((input, i) => {
       input.addEventListener('input', () => {
         if (input.value.length === 1 && i < 5) {
@@ -459,6 +455,3 @@
   </script>
 </body>
 </html>
-
-
-
