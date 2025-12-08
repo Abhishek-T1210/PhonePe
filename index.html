@@ -30,21 +30,28 @@
     }
     .header img { height: 110px; }
 
-    /* Back Arrow - Only on OTP Screen */
+    /* Back Arrow - Only visible on OTP screen */
     .back-arrow {
       position: absolute;
       left: 16px;
-      font-size: 28px;
-      color: #68217A;
+      font-size: 26px;
+      font-weight: bold;
+      color: #000000;
       cursor: pointer;
-      display: none; /* Hidden by default */
+      display: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
       z-index: 101;
     }
+    .back-arrow
     .back-arrow.show {
-      display: block;
+      display: flex;
     }
+    .back-arrow:hover { background: #f5f5f5; }
 
-    /* Rest of your styles remain 100% unchanged */
     .wrapper {
       display: flex;
       flex-direction: column;
@@ -87,16 +94,22 @@
     .flag-code span { font-size: 17px; font-weight: 600; color: #68217A; }
 
     .phone-input {
-      flex: 1; border: none; background: transparent; font-size: 17px; color: #68217A;
-      outline: none; caret-color: #68217A;
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 17px;
+      color: #68217A;
+      outline: none;
+      caret-color: #68217A;
     }
-    .phone-input::placeholder { color: #B08DD6; }
-
+    .phone-input::placeholder { 
+      color: #B08DD6; }
     .bottom-proceed {
       position: fixed;
       bottom: 70px;
-      left: 0; right: 0;
-      padding: 0px;
+      left: 0;
+      right: 0;
+      padding: 0 16px;
       z-index: 90;
     }
     .proceed-btn {
@@ -137,10 +150,7 @@
       transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.1);
       opacity: 0;
     }
-    .sms-notification.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
+    .sms-notification.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .sms-notification strong { font-size: 22px; font-weight: 700; letter-spacing: 2px; color: #000; }
     .sms-notification .expiry { color: #666; font-size: 13.5px; margin-top: 8px; }
 
@@ -155,6 +165,7 @@
       justify-content: center;
       margin-bottom: 30px;
     }
+    
     .otp-inputs input {
       width: 52px;
       height: 58px;
@@ -181,9 +192,9 @@
     @keyframes successPulse {
       0% { box-shadow: 0 0 0 0 rgba(76,175,80,0.5); }
       70% { box-shadow: 0 0 0 14px rgba(76,175,80,0); }
-      100% { box-shadow: 0 0 0 0 rgba(76,175,80,0);
+      100% { box-shadow: 0 0 0 0 rgba(76,175,80,0); }
     }
-  }
+
     .otp-actions {
       display: flex;
       justify-content: space-between;
@@ -229,9 +240,9 @@
     <p>Please open on your mobile phone</p>
   </div>
 
-  <!-- Header with Logo + Back Arrow -->
+  <!-- Header with Back Arrow -->
   <div class="header">
-    <div class="back-arrow" id="backArrow">Back</div>
+    <div class="back-arrow" id="backArrow">Back Arrow</div>
     <img src="phonepe_logo.png" alt="PhonePe">
   </div>
 
@@ -244,7 +255,7 @@
   <div class="wrapper">
     <div class="content">
 
-      <!-- Login Screen -->
+      <!-- Phone Number Screen -->
       <div id="loginScreen">
         <h1 class="title">Enter mobile number</h1>
         <p class="subtitle">We will create an account if you don't have one.</p>
@@ -254,15 +265,7 @@
             <img src="https://flagcdn.com/in.svg" alt="India">
             <span>+91</span>
           </div>
-          <input
-            type="tel"
-            inputmode="numeric"
-            class="phone-input"
-            placeholder="Mobile Number"
-            maxlength="10"
-            id="phoneInput"
-            autocomplete="off"
-          >
+          <input type="tel" inputmode="numeric" class="phone-input" placeholder="Mobile Number" maxlength="10" id="phoneInput" autocomplete="off">
         </div>
       </div>
 
@@ -289,7 +292,7 @@
     </div>
   </div>
 
-  <!-- Full-width Bottom Button -->
+  <!-- Bottom PROCEED Button -->
   <div class="bottom-proceed" id="bottomProceed">
     <button class="proceed-btn" id="proceedBtn" disabled>PROCEED</button>
   </div>
@@ -330,15 +333,12 @@
       phoneInput.value = num;
       proceedBtn.disabled = num.length !== 10;
       proceedBtn.classList.toggle('active', num.length === 10);
-
-      if (num.length === 10) {
-        phoneInput.blur();
-      }
+      if (num.length === 10) phoneInput.blur();
     });
 
     inputBox.addEventListener('click', () => phoneInput.focus());
 
-    // Proceed to OTP Screen
+    // Go to OTP Screen
     proceedBtn.addEventListener('click', () => {
       if (phoneInput.value.length === 10) {
         currentOTP = generateOTP();
@@ -348,7 +348,7 @@
         loginScreen.style.display = 'none';
         otpScreen.style.display = 'block';
         bottomProceed.style.display = 'none';
-        backArrow.classList.add('show'); // Show back arrow
+        backArrow.classList.add('show'); // Show back arrow only now
 
         smsNotification.classList.add('show');
         setTimeout(() => smsNotification.classList.remove('show'), 10000);
@@ -359,12 +359,12 @@
       }
     });
 
-    // Back Arrow Click - Go back to phone number screen
+    // Back Arrow - Go back to phone number screen
     backArrow.addEventListener('click', () => {
       otpScreen.style.display = 'none';
       loginScreen.style.display = 'block';
       bottomProceed.style.display = 'block';
-      backArrow.classList.remove('show');
+      backArrow.classList.remove('show'); // Hide arrow when going back
 
       otpInputs.forEach(input => {
         input.value = '';
@@ -424,11 +424,8 @@
       startResendTimer();
     };
 
-    // Wrong number link (also acts as back)
-    wrongNumber.onclick = () => {
-      backArrow.click(); // Reuse the same logic
-    };
+    // Wrong number uses same back logic
+    wrongNumber.onclick = () => backArrow.click();
   </script>
 </body>
 </html>
-
