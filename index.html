@@ -27,7 +27,7 @@
       z-index: 100;
       box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     }
-    .header img { height: 110px; }
+    .header img { height: 44px; }
 
     /* Main Wrapper */
     .wrapper {
@@ -35,7 +35,7 @@
       flex-direction: column;
       min-height: 100vh;
       padding-top: 70px;
-      padding-bottom: 70px;
+      padding-bottom: 140px; /* Space for fixed button + footer */
     }
 
     .content {
@@ -46,6 +46,7 @@
       align-items: center;
       max-width: 360px;
       margin: 0 auto;
+      width: 100%;
     }
 
     .title {
@@ -73,7 +74,7 @@
       display: flex;
       align-items: center;
       padding: 0 16px;
-      margin-bottom: 40px;
+      margin-bottom: 32px;
       transition: all 0.3s ease;
     }
     .input-box:focus-within {
@@ -100,6 +101,15 @@
     }
     .phone-input::placeholder { color: #B08DD6; }
 
+    /* Fixed Bottom Proceed Button */
+    .bottom-proceed {
+      position: fixed;
+      bottom: 70px; /* Above footer */
+      left: 0;
+      right: 0;
+      padding: 0 24px;
+      z-index: 90;
+    }
     .proceed-btn {
       width: 100%;
       height: 54px;
@@ -111,15 +121,16 @@
       border-radius: 12px;
       cursor: not-allowed;
       transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
     }
     .proceed-btn.active {
       background: #68217A;
       color: #FFFFFF;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(104,33,122,0.35);
+      box-shadow: 0 8px 20px rgba(104,33,122,0.4);
     }
 
-    /* Real PhonePe SMS Toast */
+    /* SMS Toast */
     .sms-notification {
       position: fixed;
       top: 90px;
@@ -198,7 +209,7 @@
       background: #FFFFFF;
     }
 
-    /* Success Animation - Green Glow when OTP correct */
+    /* Success Green Glow */
     .otp-inputs input.success {
       border-color: #4CAF50 !important;
       background: #E8F5E9 !important;
@@ -223,9 +234,7 @@
       color: #68217A;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.2s;
     }
-    .resend-link:hover, .wrong-number:hover { opacity: 0.8; }
 
     /* Footer */
     .footer-terms {
@@ -238,7 +247,7 @@
       color: #777;
       line-height: 1.5;
       box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
-      z-index: 90;
+      z-index: 95;
     }
     .footer-terms a { color: #68217A; text-decoration: none; font-weight: 500; }
 
@@ -290,7 +299,6 @@
           <input
             type="tel"
             inputmode="numeric"
-            pattern="[0-9]*"
             class="phone-input"
             placeholder="Mobile Number"
             maxlength="10"
@@ -298,8 +306,7 @@
             autocomplete="off"
           >
         </div>
-
-        <button class="proceed-btn" id="proceedBtn" disabled>PROCEED</button>
+        <!-- Button moved to bottom -->
       </div>
 
       <!-- OTP Screen -->
@@ -323,12 +330,18 @@
       </div>
 
     </div>
+  </div>
 
-    <div class="footer-terms">
-      By proceeding, you are agreeing to PhonePe's
-      <a href="#">Privacy Policy</a> and
-      <a href="#">Terms & Conditions</a>
-    </div>
+  <!-- Fixed Bottom Proceed Button (Only on Login Screen) -->
+  <div class="bottom-proceed" id="bottomProceed">
+    <button class="proceed-btn" id="proceedBtn" disabled>PROCEED</button>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer-terms">
+    By proceeding, you are agreeing to PhonePe's
+    <a href="#">Privacy Policy</a> and
+    <a href="#">Terms & Conditions</a>
   </div>
 
   <script>
@@ -342,16 +355,17 @@
     const otpInputs = document.querySelectorAll('.otp-digit');
     const resendText = document.getElementById('resendText');
     const wrongNumber = document.getElementById('wrongNumber');
+    const bottomProceed = document.getElementById('bottomProceed');
 
     let currentOTP = '';
 
-    // Generate Random 6-digit OTP
     function generateOTP() {
       return Math.floor(100000 + Math.random() * 900000).toString();
     }
 
     currentOTP = generateOTP();
 
+    // Phone number input
     phoneInput.addEventListener('input', () => {
       let num = phoneInput.value.replace(/\D/g, '').slice(0, 10);
       phoneInput.value = num;
@@ -359,6 +373,7 @@
       proceedBtn.classList.toggle('active', num.length === 10);
     });
 
+    // Proceed to OTP
     proceedBtn.addEventListener('click', () => {
       if (phoneInput.value.length === 10) {
         currentOTP = generateOTP();
@@ -367,6 +382,7 @@
 
         loginScreen.style.display = 'none';
         otpScreen.style.display = 'block';
+        bottomProceed.style.display = 'none'; // Hide button on OTP screen
 
         smsNotification.classList.add('show');
         setTimeout(() => smsNotification.classList.remove('show'), 10000);
@@ -377,22 +393,19 @@
       }
     });
 
-    // Manual OTP Input Only
+    // OTP Input Logic
     otpInputs.forEach((input, i) => {
       input.addEventListener('input', () => {
         if (input.value.length === 1 && i < 5) {
           otpInputs[i + 1].focus();
         }
 
-        // Check if all 6 digits entered and correct
         const enteredOTP = [...otpInputs].map(x => x.value).join('');
         if (enteredOTP.length === 6 && enteredOTP === currentOTP) {
           otpInputs.forEach(box => {
             box.classList.add('success');
             box.disabled = true;
           });
-          // Optional: redirect after success
-          // setTimeout(() => location.href = "dashboard.html", 1500);
         }
       });
 
@@ -435,6 +448,7 @@
     wrongNumber.onclick = () => {
       otpScreen.style.display = 'none';
       loginScreen.style.display = 'block';
+      bottomProceed.style.display = 'block';
       otpInputs.forEach(i => {
         i.value = '';
         i.classList.remove('success');
@@ -445,4 +459,3 @@
   </script>
 </body>
 </html>
-
