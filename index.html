@@ -213,8 +213,8 @@
       color: #666;
     }
     .pulse-loader {
-      width: 28px;
-      height: 14px;
+      width: 40px;
+      height: 15px;
       background: #f0e6ff;
       border-radius: 20px;
       position: relative;
@@ -225,15 +225,18 @@
       display: block;
     }
     .pulse-loader::after {
-      content: '';
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background: #68217A;
-      border-radius: 50%;
-      top: 2px;
-      left: 2px;
-      animation: pulseMove 1.2s infinite ease-in-out;
+   content: '';
+    position: absolute;
+    width: 26px;
+    height: 11px;
+    background: #68217A;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    top: 2px;
+    left: 2px;
+    animation: pulseMove 1.2s infinite ease-in-out;
     }
     @keyframes pulseMove {
       0%   { left: 2px; }
@@ -245,14 +248,15 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 6px;
+      padding: 0px;
     }
 
-  .wrong-number {
+    .wrong-number {
       color: #68217A;
       font-weight: 600;
       cursor: pointer;
       font-size: 14px;
+      display: none;
     }
 
     .footer-terms {
@@ -333,7 +337,6 @@
           <div class="resend-wrapper" id="resendWrapper">
             <div class="pulse-loader" id="pulseLoader"></div>
             <span id="resendText">Resend OTP in <strong>10s</strong></span>
-            <div class="pulse-loader" id="pulseLoader"></div>
           </div>
           <span class="wrong-number" id="wrongNumber">Wrong number?</span>
         </div>
@@ -487,4 +490,3 @@
   </script>
 </body>
 </html>
-
