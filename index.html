@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>PhonePe - Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #FFFFFF;
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 70px;
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+    .header img { height: 106px; }
+
+    /* Wrapper */
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding-top: 70px;
+      padding-bottom: 70px;
+    }
+
+    .content {
+      flex: 1;
+      padding: 40px 24px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+
+    .title { font-size: 26px; font-weight: 700; color: #1A1A1A; text-align: center; margin-bottom: 12px; }
+    .subtitle { font-size: 15px; color: #666; text-align: center; margin-bottom: 40px; line-height: 1.5; }
+
+    /* Fixed Input Box - Now Clickable & Shows Number Pad */
+    .input-box {
+      width: 100%;
+      height: 54px;
+      background: #F9F5FF;
+      border: 1.5px solid #68217A;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      margin-bottom: 40px;
+      transition: all 0.25s ease;
+      cursor: text;
+    }
+    .input-box:focus-within {
+      box-shadow: 0 0 0 3px rgba(104,33,122,0.15);
+      border-color: #68217A;
+    }
+
+    .flag-code {
+      display: flex;
+      align-items: center;
+      margin-right: 10px;
+      pointer-events: none;
+      user-select: none;
+    }
+    .flag-code img {
+      width: 26px;
+      height: 18px;
+      margin-right: 6px;
+      border-radius: 3px;
+    }
+    .flag-code span {
+      font-size: 16px;
+      font-weight: 600;
+      color: #68217A;
+    }
+
+    /* Fixed Input - Now Fully Editable */
+    .phone-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 16px;
+      color: #68217A;
+      outline: none;
+      caret-color: #68217A;
+      /* Forces numeric keypad on mobile */
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .phone-input::placeholder {
+      color: #A68ACF;
+      font-weight: 400;
+    }
+
+    .proceed-btn {
+      width: 100%; height: 52px;
+      background: #EDEDED; color: #A0A0A0; font-size: 16px; font-weight: 600;
+      border: none; border-radius: 10px; cursor: not-allowed;
+      transition: all 0.25s ease;
+    }
+    .proceed-btn.active {
+      background: #68217A; color: #FFFFFF; cursor: pointer;
+      box-shadow: 0 3px 10px rgba(104,33,122,0.25);
+    }
+
+    /* Real PhonePe SMS Notification */
+    .sms-notification {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-150%);
+      background: #FFFFFF;
+      color: #000;
+      padding: 16px 20px;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.18);
+      max-width: 90%;
+      width: 320px;
+      text-align: center;
+      font-size: 14.5px;
+      line-height: 1.5;
+      z-index: 999;
+      transition: transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.4s;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .sms-notification.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .sms-notification strong {
+      font-weight: 700;
+      font-size: 20px;
+      color: #000;
+      letter-spacing: 1px;
+    }
+    .sms-notification .expiry {
+      color: #666;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    /* Footer */
+    .footer-terms {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: #FFFFFF;
+      padding: 14px 24px;
+      text-align: center;
+      font-size: 12.5px;
+      color: #777777;
+      line-height: 1.5;
+      box-shadow: 0 -1px 8px rgba(0,0,0,0.05);
+      z-index: 90;
+    }
+    .footer-terms a { color: #68217A; text-decoration: none; font-weight: 500; }
+
+    /* OTP Screen */
+    .otp-screen { display: none; width: 100%; text-align: center; }
+    .otp-title { font-size: 22px; font-weight: 600; margin-bottom: 10px; }
+    .otp-subtitle { font-size: 14px; color: #666; margin-bottom: 28px; }
+    .otp-subtitle span { font-weight: 500; color: #333; }
+    .otp-inputs { display: flex; gap: 10px; justify-content: center; margin-bottom: 24px; }
+    .otp-inputs input {
+      width: 48px; height: 52px; border: 1.5px solid #E0E0E0; border-radius: 8px;
+      font-size: 22px; font-weight: 600; text-align: center; outline: none;
+    }
+    .otp-inputs input:focus { border-color: #68217A; box-shadow: 0 0 0 2px rgba(104,33,122,0.1); }
+
+    .otp-actions { display: flex; justify-content: space-between; font-size: 13px; color: #666; padding: 0 8px; }
+    .resend-link, .wrong-number { color: #68217A; font-weight: 500; cursor: pointer; }
+
+    .success-toast {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: #000000EE; color: white; padding: 16px 32px; border-radius: 10px;
+      font-size: 16px; font-weight: 600; z-index: 999; opacity: 0; transition: opacity 0.3s;
+    }
+    .success-toast.show { opacity: 1; }
+
+    .desktop-block {
+      display: none;
+      position: fixed; inset: 0; background: #68217A; color: white;
+      align-items: center; justify-content: center; text-align: center;
+      z-index: 9999; padding: 40px; flex-direction: column; gap: 20px;
+    }
+    .desktop-block img { width: 90px; filter: brightness(0) invert(1); }
+
+    @media (min-width: 768px) {
+      .wrapper, .header { display: none; }
+      .desktop-block { display: flex; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="desktop-block">
+    <img src="https://www.phonepe.com/web-static/img/phonepe_logo.svg" alt="PhonePe">
+    <h1>Desktop Not Supported</h1>
+    <p>Please open on your mobile phone</p>
+  </div>
+
+  <div class="header">
+    <img src="media/phonepe_logo.png" alt="PhonePe">
+  </div>
+
+  <!-- Real PhonePe SMS -->
+  <div class="sms-notification" id="smsNotification">
+    Your verification code is <strong>281469</strong><br>
+    <span class="expiry">Your code expires in 10 minutes.</span>
+  </div>
+
+  <div class="wrapper">
+    <div class="content">
+
+      <div id="loginScreen">
+        <h1 class="title">Enter mobile number</h1>
+        <p class="subtitle">We will create an account if you don't have one.</p>
+
+        <!-- Clickable Input Box -->
+        <div class="input-box" onclick="document.getElementById('phoneInput').focus()">
+          <div class="flag-code">
+            <img src="https://flagcdn.com/in.svg" alt="India">
+            <span>+91</span>
+          </div>
+          <!-- Fixed: Now fully editable & triggers number pad -->
+          <input 
+            type="tel" 
+            inputmode="numeric" 
+            pattern="[0-9]*" 
+            class="phone-input" 
+            placeholder="Mobile Number" 
+            maxlength="10" 
+            id="phoneInput"
+            autocomplete="off"
+          >
+        </div>
+
+        <button class="proceed-btn" id="proceedBtn" disabled>PROCEED</button>
+      </div>
+
+      <div class="otp-screen" id="otpScreen">
+        <div class="otp-title">Enter OTP</div>
+        <p class="otp-subtitle">Sent to <span id="otpNumber">+91 xxxxx xxxxx</span></p>
+
+        <div class="otp-inputs">
+          <input type="text" maxlength="1" class="otp-digit">
+          <input type="text" maxlength="1" class="otp-digit">
+          <input type="text" maxlength="1" class="otp-digit">
+          <input type="text" maxlength="1" class="otp-digit">
+          <input type="text" maxlength="1" class="otp-digit">
+          <input type="text" maxlength="1" class="otp-digit">
+        </div>
+
+        <div class="otp-actions">
+          <span id="resendText">Resend OTP in <strong>60s</strong></span>
+          <span class="wrong-number" id="wrongNumber">Wrong number?</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-terms">
+      By proceeding, you are agreeing to PhonePe's 
+      <a href="#">Privacy Policy</a> and 
+      <a href="#">Terms & Conditions</a>
+    </div>
+  </div>
+
+  <div class="success-toast" id="successToast">Login Successful!</div>
+
+  <script>
+    const phoneInput = document.getElementById('phoneInput');
+    const proceedBtn = document.getElementById('proceedBtn');
+    const loginScreen = document.getElementById('loginScreen');
+    const otpScreen = document.getElementById('otpScreen');
+    const smsNotification = document.getElementById('smsNotification');
+    const otpNumber = document.getElementById('otpNumber');
+    const otpInputs = document.querySelectorAll('.otp-digit');
+    const wrongNumber = document.getElementById('wrongNumber');
+    const successToast = document.getElementById('successToast');
+
+    // Now works perfectly
+    phoneInput.addEventListener('input', () => {
+      let num = phoneInput.value.replace(/\D/g, '').slice(0, 10);
+      phoneInput.value = num;
+      proceedBtn.disabled = num.length !== 10;
+      proceedBtn.classList.toggle('active', num.length === 10);
+    });
+
+    proceedBtn.addEventListener('click', () => {
+      if (phoneInput.value.length === 10) {
+        otpNumber.textContent = `+91 ${phoneInput.value.slice(0,5)} ${phoneInput.value.slice(5)}`;
+        loginScreen.style.display = 'none';
+        otpScreen.style.display = 'block';
+        smsNotification.classList.add('show');
+        setTimeout(() => smsNotification.classList.remove('show'), 5000);
+        startResendTimer();
+        otpInputs[0].focus();
+      }
+    });
+
+    otpInputs.forEach((input, i) => {
+      input.addEventListener('input', () => {
+        if (input.value && i < 5) otpInputs[i+1].focus();
+        if ([...otpInputs].map(x => x.value).join('') === '281469') {
+          successToast.classList.add('show');
+          setTimeout(() => alert("Welcome to PhonePe Clone!"), 1200);
+        }
+      });
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Backspace' && !input.value && i > 0) otpInputs[i-1].focus();
+      });
+    });
+
+    function startResendTimer() {
+      let t = 60;
+      const int = setInterval(() => {
+        t--;
+        document.getElementById('resendText').innerHTML = 
+          t > 0 ? `Resend OTP in <strong>${t}s</strong>` : `<span class="resend-link">Resend OTP</span>`;
+        if (t <= 0) clearInterval(int);
+      }, 1000);
+    }
+
+    wrongNumber.onclick = () => {
+      otpScreen.style.display = 'none';
+      loginScreen.style.display = 'block';
+      otpInputs.forEach(i => i.value = '');
+    };
+  </script>
+</body>
+</html>
