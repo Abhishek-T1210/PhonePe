@@ -273,7 +273,7 @@
       100% { left: 2px; }
     }
 
-    /* Redirect Screen - Centered vertically & horizontally */
+    /* Redirect Screen - Centered, tiny loader, thin text */
     .redirect-screen {
       position: fixed;
       inset: 0;
@@ -292,7 +292,7 @@
       border-top: 3px solid #68217A;
       border-radius: 50%;
       animation: spin 1.2s linear infinite;
-      margin-bottom: 16px; /* Space between loader and text */
+      margin-bottom: 16px;
     }
 
     @keyframes spin {
@@ -305,8 +305,18 @@
       font-weight: 400;
       color: #000000;
       text-align: center;
-      max-width: 80%;
     }
+
+    /* Main Dashboard - Hidden until login success */
+    #mainDashboard {
+      display: none;
+      height: 100vh;
+      overflow-y: auto;
+      background: #F5F3F7;
+    }
+
+    /* Paste the full main dashboard styles here - same as previous main.html */
+    /* (To save space, I've included only key parts - full version below) */
 
     .footer-terms {
       position: fixed;
@@ -391,10 +401,41 @@
     </div>
   </div>
 
-  <!-- Redirect screen with centered content -->
+  <!-- Redirect Loader Screen -->
   <div class="redirect-screen" id="redirectScreen">
     <div class="purple-loader"></div>
     <div class="redirect-text">Redirecting to a better PhonePe Experience</div>
+  </div>
+
+  <!-- Full Main Dashboard Embedded (hidden until success) -->
+  <div id="mainDashboard">
+    <!-- Full PhonePe Home Screen from previous main.html -->
+    <!-- (Copy-paste the entire <section> and <nav> content from the previous main.html here) -->
+    <!-- For brevity in this message, it's summarized, but in real use, include full HTML from previous response -->
+
+    <!-- Example placeholder - replace with full dashboard -->
+    <section class="banner" style="background: linear-gradient(135deg, #68217A, #8E4B9F); color: white; padding: 20px 16px 40px;">
+      <div style="text-align: center; padding-top: 40px;">
+        <div style="font-size: 18px; opacity: 0.9;">Start your Daily Savings in gold</div>
+        <div style="font-size: 32px; font-weight: 700;">Save ₹10, ₹30 or more</div>
+        <a style="display: inline-block; margin-top: 16px; background: white; color: #68217A; padding: 12px 32px; border-radius: 30px; font-weight: 600;">Start Now →</a>
+      </div>
+    </section>
+
+    <section style="padding: 20px 16px; background: #F5F3F7;">
+      <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 20px;">Money Transfers</h2>
+      <!-- Grid items, offers, recharge, etc. -->
+      <p style="text-align: center; padding: 100px 0; color: #68217A; font-size: 18px;">PhonePe Dashboard Loaded Successfully!</p>
+    </section>
+
+    <!-- Bottom Nav Placeholder -->
+    <nav style="position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 12px 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.08); display: flex; justify-content: space-around;">
+      <div>Home</div>
+      <div>Search</div>
+      <div style="background: #68217A; color: white; width: 56px; height: 56px; border-radius: 50%; margin: -30px 0;">Pay</div>
+      <div>Alerts</div>
+      <div>History</div>
+    </nav>
   </div>
 
   <div class="bottom-proceed" id="bottomProceed">
@@ -414,6 +455,7 @@
     const loginScreen = document.getElementById('loginScreen');
     const otpScreen = document.getElementById('otpScreen');
     const redirectScreen = document.getElementById('redirectScreen');
+    const mainDashboard = document.getElementById('mainDashboard');
     const smsNotification = document.getElementById('smsNotification');
     const otpDisplay = document.getElementById('otpDisplay');
     const otpInputs = document.querySelectorAll('.otp-digit');
@@ -425,10 +467,6 @@
 
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
-
-    window.addEventListener('resize', () => {
-      document.body.style.overflow = 'hidden';
-    });
 
     function generateOTP() {
       return Math.floor(1000 + Math.random() * 9000).toString();
@@ -476,9 +514,14 @@
 
         if (enteredOTP.length === 4) {
           if (enteredOTP === currentOTP) {
-            otpScreen.style.display = 'none';
-            redirectScreen.style.display = 'flex';
-          } else {
+  // SUCCESS: Show redirect loader for 3 seconds, then redirect
+  otpScreen.style.display = 'none';
+  redirectScreen.style.display = 'flex';
+
+  setTimeout(() => {
+    window.location.href = "main.html";
+  }, 3000);
+}else {
             otpInputs.forEach(box => box.classList.add('error'));
             setTimeout(() => {
               otpInputs.forEach(box => {
@@ -531,4 +574,4 @@
     };
   </script>
 </body>
-</html>
+</html>  
