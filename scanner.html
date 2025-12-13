@@ -60,19 +60,33 @@
       object-fit: cover;
     }
 
-    /* Dark Overlay Outside Scan Area */
+    /* Dark Semi-Transparent Overlay with Clear Center Hole */
     .scan-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.55);
+      background: rgba(0, 0, 0, 0.6); /* Dark tint everywhere */
       pointer-events: none;
       z-index: 5;
     }
 
-    /* Centered Scanner Container */
+    /* Cut out a transparent hole in the center for the scanner */
+    .scan-overlay::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 280px;
+      height: 280px;
+      background: transparent;
+      border-radius: 24px;
+      box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.6); /* Re-applies dark tint outside the hole */
+    }
+
+    /* Centered Scanner Container (for purple corners and buttons) */
     .scan-container {
       position: absolute;
       top: 50%;
@@ -81,21 +95,21 @@
       width: 280px;
       text-align: center;
       z-index: 6;
+      pointer-events: none; /* So taps go through to camera */
     }
 
     .scan-area {
       width: 280px;
       height: 280px;
-      background: transparent;
-      border-radius: 24px;
       position: relative;
     }
 
-    /* Thin Static Purple Rounded Corner Brackets ONLY */
+    /* Thin Static Purple Rounded Corner Brackets */
     .corner-bracket {
       position: absolute;
       width: 40px;
       height: 40px;
+      pointer-events: none;
     }
 
     .top-left {
@@ -127,12 +141,13 @@
       border-bottom-right-radius: 20px;
     }
 
-    /* Buttons Directly Below Scanner */
+    /* Buttons Below Scanner - Now clickable (override pointer-events) */
     .bottom-controls {
       margin-top: 28px;
       display: flex;
       justify-content: center;
       gap: 60px;
+      pointer-events: auto; /* Make buttons clickable */
     }
 
     .control-btn {
@@ -185,10 +200,10 @@
   <!-- QR Scanner Video -->
   <div id="reader"></div>
 
-  <!-- Dark Overlay -->
+  <!-- Dark Overlay with Clear Center -->
   <div class="scan-overlay"></div>
 
-  <!-- Your Custom Scanner + Buttons -->
+  <!-- Purple Corners + Buttons -->
   <div class="scan-container">
     <div class="scan-area">
       <div class="corner-bracket top-left"></div>
@@ -200,13 +215,13 @@
     <div class="bottom-controls">
       <div class="control-btn" id="upload-btn">
         <div class="control-icon">
-          <img src="https://img.icons8.com/ios-filled/50/ffffff/image.png" alt="Upload">
+          <img src="https://img.icons8.com/ios/50/FFFFFF/picture.png" alt="Upload">
         </div>
         Upload QR
       </div>
       <div class="control-btn" id="torch-btn">
         <div class="control-icon">
-          <img src="https://img.icons8.com/ios-filled/50/ffffff/flashlight.png" alt="Torch">
+          <img src="https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/64/FFFFFF/external-torch-interface-kiranshastry-lineal-kiranshastry.png" alt="Torch">
         </div>
         Torch
       </div>
@@ -222,11 +237,10 @@
   <script>
     const html5QrCode = new Html5Qrcode("reader");
 
-    // REMOVED qrbox from config → no more default white/gray scan box
     const config = {
       fps: 10,
       aspectRatio: 1,
-      facingMode: "environment" // Back camera
+      facingMode: "environment"
     };
 
     html5QrCode.start(
