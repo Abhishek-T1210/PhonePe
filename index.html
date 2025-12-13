@@ -56,7 +56,7 @@
     .input-box {
       width: 100%;
       height: 56px;
-      background: #F9F F5FF;
+      background: #F9F5FF;
       border: 1.8px solid #68217A;
       border-radius: 12px;
       display: flex;
@@ -150,22 +150,44 @@
       margin-top: 8px;
     }
 
-    .otp-screen { display: none; width: 100%; text-align: center; }
-    .otp-title { font-size: 23px; font-weight: 600; margin-bottom: 12px; color: #1A1A1A; }
-    .otp-subtitle { font-size: 14.5px; color: #555; margin-bottom: 32px; }
-    .otp-subtitle span { font-weight: 600; color: #000; }
+    .otp-screen { 
+      display: none; 
+      width: 100%; 
+      text-align: left;
+    }
+    .otp-title { 
+      font-size: 18px; 
+      font-weight: 600; 
+      margin-bottom: 8px; 
+      color: #1A1A1A; 
+      text-align: left;
+    }
+    .otp-subtitle { 
+      font-size: 14.5px; 
+      color: #555; 
+      margin-bottom: 32px; 
+      text-align: left;
+    }
+
+    .otp-instruction {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1A1A1A;
+      margin-bottom: 20px;
+      text-align: left;
+    }
 
     .otp-inputs {
       display: flex;
-      gap: 12px;
-      justify-content: center;
+      gap: 14px;
+      justify-content: flex-start;
       margin-bottom: 30px;
     }
     .otp-inputs input {
-      width: 52px;
-      height: 58px;
+      width: 48px;
+      height: 54px;
       border: 2px solid #E0E0E0;
-      border-radius: 12px;
+      border-radius: 8px;
       font-size: 24px;
       font-weight: 700;
       text-align: center;
@@ -198,13 +220,12 @@
       background: #ffebee !important;
       animation: shake 0.6s ease-in-out;
     }
-   @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
-  20%, 40%, 60%, 80% { transform: translateX(8px); }
-}
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+      20%, 40%, 60%, 80% { transform: translateX(8px); }
+    }
 
-    /* Small Thin Pulsing Loader - Right beside Resend Text */
     .resend-wrapper {
       display: flex;
       align-items: center;
@@ -225,19 +246,15 @@
       display: block;
     }
     .pulse-loader::after {
-   content: '';
-    position: absolute;
-    width: 26px;
-    height: 13px;
-    background: #68217A;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-    top: 2px;
-    left: 2px;
-    animation: pulseMove 1.2s infinite 
-ease-in-out;
+      content: '';
+      position: absolute;
+      width: 26px;
+      height: 13px;
+      background: #68217A;
+      border-radius: 10px;
+      top: 2px;
+      left: 2px;
+      animation: pulseMove 1.2s infinite ease-in-out;
     }
     @keyframes pulseMove {
       0%   { left: 2px; }
@@ -249,15 +266,7 @@ ease-in-out;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0px;
-    }
-
-    .wrong-number {
-      color: #68217A;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 14px;
-      display: none;
+      width: 100%;
     }
 
     .footer-terms {
@@ -301,7 +310,7 @@ ease-in-out;
   </div>
 
   <div class="sms-notification" id="smsNotification">
-    Your verification code is <strong id="otpDisplay">281469</strong><br>
+    Your verification code is <strong id="otpDisplay">1234</strong><br>
     <span class="expiry">Your code expires in 10 minutes.</span>
   </div>
 
@@ -322,12 +331,12 @@ ease-in-out;
       </div>
 
       <div class="otp-screen" id="otpScreen">
-        <div class="otp-title">Enter OTP</div>
-        <p class="otp-subtitle">Sent to <span id="otpNumber">+91 xxxxx xxxxx</span></p>
+        <div class="otp-title">Verify your mobile number</div>
+        <p class="otp-subtitle">This verifies your identity and helps you log in to PhonePe</p>
+
+        <div class="otp-instruction">Enter 4-digit OTP</div>
 
         <div class="otp-inputs">
-          <input type="tel" maxlength="1" class="otp-digit">
-          <input type="tel" maxlength="1" class="otp-digit">
           <input type="tel" maxlength="1" class="otp-digit">
           <input type="tel" maxlength="1" class="otp-digit">
           <input type="tel" maxlength="1" class="otp-digit">
@@ -339,7 +348,6 @@ ease-in-out;
             <div class="pulse-loader" id="pulseLoader"></div>
             <span id="resendText">Resend OTP in <strong>10s</strong></span>
           </div>
-          <span class="wrong-number" id="wrongNumber">Wrong number?</span>
         </div>
       </div>
 
@@ -364,20 +372,19 @@ ease-in-out;
     const otpScreen = document.getElementById('otpScreen');
     const smsNotification = document.getElementById('smsNotification');
     const otpDisplay = document.getElementById('otpDisplay');
-    const otpNumber = document.getElementById('otpNumber');
     const otpInputs = document.querySelectorAll('.otp-digit');
     const resendText = document.getElementById('resendText');
     const pulseLoader = document.getElementById('pulseLoader');
-    const wrongNumber = document.getElementById('wrongNumber');
     const bottomProceed = document.getElementById('bottomProceed');
 
     let currentOTP = '';
 
     function generateOTP() {
-      return Math.floor(100000 + Math.random() * 900000).toString();
+      return Math.floor(1000 + Math.random() * 9000).toString();
     }
 
     currentOTP = generateOTP();
+    otpDisplay.textContent = currentOTP;
 
     phoneInput.addEventListener('input', () => {
       let num = phoneInput.value.replace(/\D/g, '').slice(0, 10);
@@ -393,7 +400,6 @@ ease-in-out;
       if (phoneInput.value.length === 10) {
         currentOTP = generateOTP();
         otpDisplay.textContent = currentOTP;
-        otpNumber.textContent = `+91 ${phoneInput.value.slice(0,5)} ${phoneInput.value.slice(5)}`;
 
         loginScreen.style.display = 'none';
         otpScreen.style.display = 'block';
@@ -413,11 +419,11 @@ ease-in-out;
 
     otpInputs.forEach((input, i) => {
       input.addEventListener('input', () => {
-        if (input.value.length === 1 && i < 5) otpInputs[i + 1].focus();
+        if (input.value.length === 1 && i < 3) otpInputs[i + 1].focus();
 
         const enteredOTP = [...otpInputs].map(x => x.value).join('');
 
-        if (enteredOTP.length === 6) {
+        if (enteredOTP.length === 4) {
           if (enteredOTP === currentOTP) {
             otpInputs.forEach(box => {
               box.classList.add('success');
@@ -474,19 +480,6 @@ ease-in-out;
       });
       otpInputs[0].focus();
       startResendTimer();
-    };
-
-    wrongNumber.onclick = () => {
-      otpScreen.style.display = 'none';
-      loginScreen.style.display = 'block';
-      bottomProceed.style.display = 'block';
-      pulseLoader.classList.remove('active');
-      otpInputs.forEach(i => {
-        i.value = '';
-        i.classList.remove('success', 'error');
-        i.disabled = false;
-      });
-      phoneInput.focus();
     };
   </script>
 </body>
