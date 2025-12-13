@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <!-- Fix for keyboard scroll issue on mobile -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, height=device-height"/>
   <title>PhonePe</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,7 +12,7 @@
       height: 100%;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: #FFFFFF;
-      overflow: hidden; /* Prevent all scrolling */
+      overflow: hidden;
     }
 
     .header {
@@ -43,7 +42,7 @@
 
     .content {
       flex: 1;
-      padding: 40px 12px 20px; /* Reduced left/right gap for tighter look */
+      padding: 40px 12px 20px;
       display: flex;
       flex-direction: column;
       max-width: 360px;
@@ -129,7 +128,6 @@
       box-shadow: 0 8px 25px rgba(104,33,122,0.45);
     }
 
-    /* Simple original one-line notification (as requested) */
     .sms-notification {
       position: fixed;
       top: 90px;
@@ -199,10 +197,10 @@
       margin-bottom: 30px;
     }
     .otp-inputs input {
-      width: 38px;
-      height: 44px;
+      width: 48px;
+      height: 54px;
       border: 2px solid #E0E0E0;
-      border-radius: 1px;
+      border-radius: 8px;
       font-size: 24px;
       font-weight: 700;
       text-align: center;
@@ -315,7 +313,6 @@
     <img src="phonepe_logo.png" alt="PhonePe">
   </div>
 
-  <!-- Simple original notification -->
   <div class="sms-notification" id="smsNotification">
     Your verification code is <strong id="otpDisplay">1234</strong><br>
     <span class="expiry">Your code expires in 10 minutes.</span>
@@ -384,7 +381,6 @@
 
     let currentOTP = '';
 
-    // Prevent scroll even when keyboard opens
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
 
@@ -419,7 +415,7 @@
         bottomProceed.style.display = 'none';
 
         smsNotification.classList.add('show');
-        setTimeout(() => smsNotification.classList.remove('show'), 10000);
+        setTimeout(() => smsNotification.classList.remove('show'), 5000); // Now 5 seconds
 
         startResendTimer();
         otpInputs.forEach(input => {
@@ -484,7 +480,7 @@
       otpDisplay.textContent = currentOTP;
 
       smsNotification.classList.add('show');
-      setTimeout(() => smsNotification.classList.remove('show'), 10000);
+      setTimeout(() => smsNotification.classList.remove('show'), 5000); // Also 5 seconds on resend
 
       otpInputs.forEach(input => {
         input.value = '';
