@@ -15,6 +15,13 @@
       overflow: hidden;
     }
 
+    /* Scanner View Container */
+    #scanner-view {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
     /* Top Bar */
     .top-bar {
       position: fixed;
@@ -28,7 +35,6 @@
       padding: 0 16px;
       color: white;
       z-index: 10;
-      background: rgba(0,0,0,0.5);
     }
     .close-btn {
       font-size: 28px;
@@ -68,40 +74,44 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.6);
       pointer-events: none;
       z-index: 5;
+      background: rgba(0, 0, 0, 0.7);
     }
 
+    /* Transparent cutout - moved up from center */
     .scan-overlay::before {
       content: '';
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       width: 280px;
       height: 280px;
+      left: 50%;
+      top: 38%;                     /* Moved up (was 50%) */
+      margin-left: -140px;
+      margin-top: -140px;
       background: transparent;
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
       border-radius: 24px;
-      box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.6);
     }
 
-    /* Scanner Container */
-    .scan-container {
+    /* Scanner frame for corner brackets - same positioning */
+    .scan-frame {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       width: 280px;
-      text-align: center;
-      z-index: 6;
+      height: 280px;
+      left: 50%;
+      top: 38%;                     /* Same as overlay */
+      margin-left: -140px;
+      margin-top: -140px;
       pointer-events: none;
+      z-index: 6;
     }
 
     .scan-area {
-      width: 280px;
-      height: 280px;
+      width: 100%;
+      height: 100%;
       position: relative;
+      border-radius: 24px;
     }
 
     /* Purple Corner Brackets */
@@ -141,13 +151,19 @@
       border-bottom-right-radius: 20px;
     }
 
-    /* Buttons Below Scanner */
+    /* Bottom controls - smaller buttons, closer to scanner */
     .bottom-controls {
-      margin-top: 28px;
+      position: absolute;
+      left: 50%;
+      top: 40%;                     /* Align with scanner */
+      margin-top: 150px;            /* 280/2 + small extra space = ~150px below center of scanner */
+      margin-left: -100px;          /* Rough centering adjustment */
       display: flex;
       justify-content: center;
-      gap: 60px;
+      gap: 44px;                    /* Reduced gap from 60px */
       pointer-events: auto;
+      z-index: 7;
+      width: 200px;
     }
 
     .control-btn {
@@ -155,14 +171,14 @@
       flex-direction: column;
       align-items: center;
       color: white;
-      font-size: 14px;
-      gap: 8px;
+      font-size: 13px;              /* Slightly smaller text */
+      gap: 6px;                     /* Reduced gap */
       cursor: pointer;
     }
 
     .control-icon {
-      width: 56px;
-      height: 56px;
+      width: 48px;                  /* Smaller icon circle (was 56px) */
+      height: 48px;
       background: rgba(255,255,255,0.15);
       border-radius: 50%;
       display: flex;
@@ -171,8 +187,8 @@
     }
 
     .control-icon img {
-      width: 28px;
-      height: 28px;
+      width: 24px;                  /* Smaller icons */
+      height: 24px;
       filter: brightness(0) invert(1);
     }
 
@@ -187,7 +203,7 @@
       z-index: 10;
     }
 
-    /* Payment Interface */
+    /* Payment Interface - unchanged */
     .payment-interface {
       position: fixed;
       top: 0;
@@ -371,27 +387,29 @@
     <div id="reader"></div>
     <div class="scan-overlay"></div>
 
-    <div class="scan-container">
+    <!-- Scanner frame with corners -->
+    <div class="scan-frame">
       <div class="scan-area">
         <div class="corner-bracket top-left"></div>
         <div class="corner-bracket top-right"></div>
         <div class="corner-bracket bottom-left"></div>
         <div class="corner-bracket bottom-right"></div>
       </div>
+    </div>
 
-      <div class="bottom-controls">
-        <div class="control-btn" id="upload-btn">
-          <div class="control-icon">
-            <img src="https://img.icons8.com/ios/50/FFFFFF/picture.png" alt="Upload">
-          </div>
-          Upload QR
+    <!-- Bottom controls - smaller and closer -->
+    <div class="bottom-controls">
+      <div class="control-btn" id="upload-btn">
+        <div class="control-icon">
+          <img src="https://img.icons8.com/ios/50/FFFFFF/picture.png" alt="Upload">
         </div>
-        <div class="control-btn" id="torch-btn">
-          <div class="control-icon">
-            <img src="https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/64/FFFFFF/external-torch-interface-kiranshastry-lineal-kiranshastry.png" alt="Torch">
-          </div>
-          Torch
+        Upload QR
+      </div>
+      <div class="control-btn" id="torch-btn">
+        <div class="control-icon">
+          <img src="https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/64/FFFFFF/external-torch-interface-kiranshastry-lineal-kiranshastry.png" alt="Torch">
         </div>
+        Torch
       </div>
     </div>
 
@@ -454,37 +472,32 @@
     let html5QrCode = null;
     let currentUpiData = null;
 
-    // Parse UPI QR Code
     function parseUpiQr(qrString) {
       console.log("Raw QR:", qrString);
       
-      // Check if it's a UPI QR
       if (!qrString.toLowerCase().startsWith('upi://pay')) {
         throw new Error('Not a valid UPI QR code');
       }
 
-      // Extract query parameters
       const url = new URL(qrString.replace('upi://', 'https://'));
       const params = new URLSearchParams(url.search);
 
       const upiData = {
-        pa: params.get('pa') || '',  // Payee address (VPA)
-        pn: params.get('pn') || '',  // Payee name
-        am: params.get('am') || '',  // Amount
-        cu: params.get('cu') || 'INR',  // Currency
-        tn: params.get('tn') || '',  // Transaction note
-        tr: params.get('tr') || '',  // Transaction reference
-        mc: params.get('mc') || '',  // Merchant code
-        tid: params.get('tid') || '',  // Transaction ID
-        url: params.get('url') || '',  // URL for bill
-        mam: params.get('mam') || ''  // Minimum amount
+        pa: params.get('pa') || '',
+        pn: params.get('pn') || '',
+        am: params.get('am') || '',
+        cu: params.get('cu') || 'INR',
+        tn: params.get('tn') || '',
+        tr: params.get('tr') || '',
+        mc: params.get('mc') || '',
+        tid: params.get('tid') || '',
+        url: params.get('url') || '',
+        mam: params.get('mam') || ''
       };
 
-      // Decode URL-encoded values
       upiData.pn = decodeURIComponent(upiData.pn).replace(/\+/g, ' ');
       upiData.tn = decodeURIComponent(upiData.tn).replace(/\+/g, ' ');
 
-      // Validate required fields
       if (!upiData.pa || !upiData.pn) {
         throw new Error('Missing required UPI fields (pa or pn)');
       }
@@ -493,27 +506,23 @@
       return upiData;
     }
 
-    // Show payment interface
     function showPaymentInterface(upiData) {
       currentUpiData = upiData;
 
-      // Update payee details
       const initials = upiData.pn.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
       document.getElementById('payee-avatar').textContent = initials;
       document.getElementById('payee-name').textContent = upiData.pn.toUpperCase();
       document.getElementById('payee-upi').textContent = upiData.pa;
 
-      // Pre-fill amount if provided
       const amountInput = document.getElementById('amount-input');
       if (upiData.am && upiData.am !== '') {
         amountInput.value = parseFloat(upiData.am).toFixed(2);
-        amountInput.disabled = true;  // Fixed amount in dynamic QR
+        amountInput.disabled = true;
       } else {
         amountInput.value = '';
-        amountInput.disabled = false;  // Editable for static QR
+        amountInput.disabled = false;
       }
 
-      // Show additional details if available
       const detailsSection = document.getElementById('qr-details');
       if (upiData.tn || upiData.tr || upiData.mc) {
         detailsSection.style.display = 'block';
@@ -524,17 +533,14 @@
         detailsSection.style.display = 'none';
       }
 
-      // Pre-fill message if provided
       if (upiData.tn) {
         document.getElementById('message-input').value = upiData.tn;
       }
 
-      // Show payment view
       document.getElementById('scanner-view').style.display = 'none';
       document.getElementById('payment-view').classList.add('active');
     }
 
-    // Back to scanner
     function backToScanner() {
       document.getElementById('payment-view').classList.remove('active');
       document.getElementById('scanner-view').style.display = 'block';
@@ -542,19 +548,16 @@
       startScanner();
     }
 
-    // Process payment
     function processPay() {
       const amount = document.getElementById('amount-input').value;
       const message = document.getElementById('message-input').value;
       const errorEl = document.getElementById('amount-error');
 
-      // Validate amount
       if (!amount || parseFloat(amount) <= 0) {
         errorEl.textContent = 'Please enter a valid amount';
         return;
       }
 
-      // Check minimum amount if specified
       if (currentUpiData.mam && parseFloat(amount) < parseFloat(currentUpiData.mam)) {
         errorEl.textContent = `Minimum amount is ₹${currentUpiData.mam}`;
         return;
@@ -562,7 +565,6 @@
 
       errorEl.textContent = '';
 
-      // Prepare payment data
       const paymentData = {
         ...currentUpiData,
         amount: parseFloat(amount),
@@ -570,15 +572,12 @@
         timestamp: new Date().toISOString()
       };
 
-      // In production, this would trigger actual UPI payment
       console.log("Payment Data:", paymentData);
       alert(`Payment Initiated!\n\nPayee: ${paymentData.pn}\nUPI ID: ${paymentData.pa}\nAmount: ₹${paymentData.amount}\n\nNote: This is a demo. In production, this would trigger the UPI payment flow.`);
       
-      // Reset and go back
       backToScanner();
     }
 
-    // Start scanner
     function startScanner() {
       if (html5QrCode) {
         html5QrCode.stop().catch(() => {});
@@ -611,10 +610,8 @@
       });
     }
 
-    // Initialize on load
     startScanner();
 
-    // Torch Toggle
     let torchOn = false;
     document.getElementById("torch-btn").addEventListener("click", () => {
       if (!html5QrCode) return;
@@ -624,7 +621,6 @@
       }).catch(() => {});
     });
 
-    // Upload QR
     document.getElementById("upload-btn").addEventListener("click", () => {
       const fileInput = document.createElement("input");
       fileInput.type = "file";
@@ -648,14 +644,13 @@
       fileInput.click();
     });
 
-    // Validate amount input
     document.getElementById('amount-input').addEventListener('input', function(e) {
       const errorEl = document.getElementById('amount-error');
       const value = parseFloat(e.target.value);
       
       if (e.target.value && (isNaN(value) || value <= 0)) {
         errorEl.textContent = 'Invalid amount';
-      } else if (currentUpiData.mam && value < parseFloat(currentUpiData.mam)) {
+      } else if (currentUpiData && currentUpiData.mam && value < parseFloat(currentUpiData.mam)) {
         errorEl.textContent = `Minimum amount is ₹${currentUpiData.mam}`;
       } else {
         errorEl.textContent = '';
