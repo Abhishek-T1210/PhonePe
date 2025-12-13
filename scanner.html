@@ -18,9 +18,7 @@
     /* Top Bar */
     .top-bar {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 60px;
       display: flex;
       justify-content: space-between;
@@ -31,7 +29,7 @@
       background: rgba(0,0,0,0.5);
     }
     .close-btn {
-      font-size: 28px;
+      font-size: 32px;
       cursor: pointer;
       font-weight: 300;
     }
@@ -40,8 +38,7 @@
       font-weight: 600;
     }
     .help-icon {
-      width: 36px;
-      height: 36px;
+      width: 36px; height: 36px;
       background: rgba(255,255,255,0.1);
       border-radius: 50%;
       display: flex;
@@ -51,36 +48,24 @@
     }
 
     /* Video Container */
-    #reader {
-      width: 100%;
-      height: 100%;
-    }
-    #reader video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    #reader { width: 100%; height: 100%; }
+    #reader video { width: 100%; height: 100%; object-fit: cover; }
 
     /* Dark Overlay */
     .scan-overlay {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background: rgba(0, 0, 0, 0.6);
       pointer-events: none;
       z-index: 5;
     }
-
     .scan-overlay::before {
       content: '';
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 280px;
-      height: 280px;
+      width: 280px; height: 280px;
       background: transparent;
       border-radius: 24px;
       box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.6);
@@ -89,272 +74,157 @@
     /* Scanner Container */
     .scan-container {
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       width: 280px;
       text-align: center;
       z-index: 6;
       pointer-events: none;
     }
+    .scan-area { width: 280px; height: 280px; position: relative; }
 
-    .scan-area {
-      width: 280px;
-      height: 280px;
-      position: relative;
-    }
+    /* Corner Brackets */
+    .corner-bracket { position: absolute; width: 40px; height: 40px; pointer-events: none; }
+    .top-left { top: 0; left: 0; border-top: 5px solid #68217A; border-left: 5px solid #68217A; border-top-left-radius: 20px; }
+    .top-right { top: 0; right: 0; border-top: 5px solid #68217A; border-right: 5px solid #68217A; border-top-right-radius: 20px; }
+    .bottom-left { bottom: 0; left: 0; border-bottom: 5px solid #68217A; border-left: 5px solid #68217A; border-bottom-left-radius: 20px; }
+    .bottom-right { bottom: 0; right: 0; border-bottom: 5px solid #68217A; border-right: 5px solid #68217A; border-bottom-right-radius: 20px; }
 
-    /* Purple Corner Brackets */
-    .corner-bracket {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      pointer-events: none;
-    }
+    .bottom-controls { margin-top: 28px; display: flex; justify-content: center; gap: 60px; pointer-events: auto; }
+    .control-btn { display: flex; flex-direction: column; align-items: center; color: white; font-size: 14px; gap: 8px; cursor: pointer; }
+    .control-icon { width: 56px; height: 56px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .control-icon img { width: 28px; height: 28px; filter: brightness(0) invert(1); }
 
-    .top-left {
-      top: 0;
-      left: 0;
-      border-top: 5px solid #68217A;
-      border-left: 5px solid #68217A;
-      border-top-left-radius: 20px;
-    }
-    .top-right {
-      top: 0;
-      right: 0;
-      border-top: 5px solid #68217A;
-      border-right: 5px solid #68217A;
-      border-top-right-radius: 20px;
-    }
-    .bottom-left {
-      bottom: 0;
-      left: 0;
-      border-bottom: 5px solid #68217A;
-      border-left: 5px solid #68217A;
-      border-bottom-left-radius: 20px;
-    }
-    .bottom-right {
-      bottom: 0;
-      right: 0;
-      border-bottom: 5px solid #68217A;
-      border-right: 5px solid #68217A;
-      border-bottom-right-radius: 20px;
-    }
-
-    /* Buttons Below Scanner */
-    .bottom-controls {
-      margin-top: 28px;
-      display: flex;
-      justify-content: center;
-      gap: 60px;
-      pointer-events: auto;
-    }
-
-    .control-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: white;
-      font-size: 14px;
-      gap: 8px;
-      cursor: pointer;
-    }
-
-    .control-icon {
-      width: 56px;
-      height: 56px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .control-icon img {
-      width: 28px;
-      height: 28px;
-      filter: brightness(0) invert(1);
-    }
-
-    /* Logo */
-    .logo {
-      position: fixed;
-      bottom: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 12px;
-      color: rgba(255,255,255,0.6);
-      z-index: 10;
-    }
+    .logo { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); font-size: 12px; color: rgba(255,255,255,0.6); z-index: 10; }
 
     /* Payment Interface */
     .payment-interface {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: #f5f5f5;
-      z-index: 100;
-      display: none;
-      flex-direction: column;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: #f5f5f7; z-index: 100; display: none; flex-direction: column;
     }
-
-    .payment-interface.active {
-      display: flex;
-    }
+    .payment-interface.active { display: flex; }
 
     .payment-header {
-      background: #5f259f;
-      color: white;
-      padding: 16px;
+      background: white;
+      padding: 16px 20px;
       display: flex;
       align-items: center;
-      gap: 16px;
+      justify-content: space-between;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
 
-    .payment-back-btn {
-      font-size: 24px;
+    .payment-back-btn, .payment-help {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
+    }
+
+    .payment-back-btn img, .payment-help img {
+      width: 24px;
+      height: 24px;
     }
 
     .payment-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
       font-size: 18px;
       font-weight: 600;
+      color: #333;
     }
 
-    .payment-content {
+    .payment-body {
       flex: 1;
       overflow-y: auto;
-      padding: 0;
+      padding: 16px 16px 100px;
     }
 
-    .payee-card {
+    .main-card {
       background: white;
+      border-radius: 16px;
       padding: 20px;
-      margin: 16px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
+    .payee-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
     .payee-avatar {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: #00bfa5;
-      color: white;
+      width: 56px; height: 56px; border-radius: 50%; background: #00bfa5;
+      color: white; font-size: 20px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .payee-name { font-size: 17px; font-weight: 600; color: #333; }
+    .payee-upi { font-size: 14.5px; color: #666; margin-top: 2px; }
+
+    .bank-verification {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: 600;
-      margin: 0 auto 12px;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-top: 1px solid #f0f0f0;
+      margin-bottom: 24px;
+      font-size: 14.5px;
     }
+    .bank-label { color: #666; }
+    .bank-name-group { display: flex; align-items: center; gap: 8px; color: #333; }
+    .bank-name-group .colon { margin-right: 4px; }
+    .bank-name-group svg { width: 19px; height: 19px; fill: #4caf50; }
 
-    .payee-name {
-      font-size: 18px;
-      font-weight: 600;
-      text-align: center;
-      margin-bottom: 4px;
-      text-transform: uppercase;
-    }
-
-    .payee-upi {
-      font-size: 14px;
-      color: #666;
-      text-align: center;
-    }
-
-    .verification-badge {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      margin-top: 8px;
-      font-size: 12px;
-      color: #4caf50;
-    }
-
-    .input-section {
-      background: white;
-      padding: 20px;
-      margin: 16px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .input-label {
-      font-size: 14px;
-      color: #666;
+    .amount-wrapper {
+      position: relative;
+      border: 1px solid #b9b9b9;
+      border-radius: 2px;
+      padding: 12px;
       margin-bottom: 8px;
     }
-
+    .rupee {
+      position: absolute;
+      left: 16px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 26px; font-weight: 700; color: #333;
+    }
     .amount-input {
-      width: 100%;
-      border: none;
-      font-size: 32px;
-      font-weight: 600;
-      padding: 8px 0;
-      outline: none;
+      width: 100%; border: none; font-size: 26px; font-weight: 600;
+      padding: 0 0 0 30px; outline: none; background: transparent;
     }
+    .amount-input::placeholder { color: #bbb; font-weight: 700; }
 
-    .message-input {
-      width: 100%;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 12px;
-      font-size: 14px;
-      outline: none;
-      font-family: inherit;
-    }
-
-    .message-input:focus {
-      border-color: #5f259f;
-    }
-
-    .pay-button {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #5f259f;
-      color: white;
-      border: none;
-      padding: 18px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      text-transform: uppercase;
-    }
-
-    .pay-button:active {
-      background: #4a1d7a;
-    }
-
-    .pay-button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-
-    .error-message {
+    .amount-error {
       color: #f44336;
       font-size: 12px;
       margin-top: 4px;
+      padding-left: 12px;
+      display: none;
     }
 
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      font-size: 14px;
+    .message-wrapper { margin-bottom: 10px; }
+    .message-input {
+      width: 100%;
+      border: 1px solid #b9b9b9;
+      border-radius: 2px;
+      padding: 16px;
+      font-size: 16px;
+      outline: none;
     }
+    .message-input::placeholder { color: #aaa; }
+    .message-input:focus { border-color: #68217A; }
 
-    .info-label {
-      color: #666;
+    .pay-button {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #e0e0e0; color: #999; border: none; padding: 18px;
+      font-size: 16px; font-weight: 600; cursor: not-allowed;
     }
-
-    .info-value {
-      font-weight: 600;
+    .pay-button.enabled {
+      background: #68217A;
+      color: #FFFFFF;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -401,267 +271,185 @@
   <!-- Payment Interface -->
   <div class="payment-interface" id="payment-view">
     <div class="payment-header">
-      <div class="payment-back-btn" onclick="backToScanner()">←</div>
+      <!-- Fixed: Back button now properly goes back to scanner -->
+      <div class="payment-back-btn" onclick="backToScanner()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+      </div>
       <div class="payment-title">Pay</div>
-      <div style="flex: 1"></div>
-      <div class="help-icon">?</div>
-    </div>
-
-    <div class="payment-content">
-      <div class="payee-card">
-        <div class="payee-avatar" id="payee-avatar">AT</div>
-        <div class="payee-name" id="payee-name">ABHISHEK VIJAYSHANKAR TIWARI</div>
-        <div class="payee-upi" id="payee-upi">9819833605-3@ybl</div>
-        <div class="verification-badge">
-          <span>✓</span>
-          <span>Banking Name Verified</span>
-        </div>
-      </div>
-
-      <div class="input-section">
-        <div class="input-label">₹ Enter Amount</div>
-        <input type="number" class="amount-input" id="amount-input" placeholder="0" step="0.01" min="0">
-        <div class="error-message" id="amount-error"></div>
-      </div>
-
-      <div class="input-section">
-        <div class="input-label">Add a message (optional)</div>
-        <input type="text" class="message-input" id="message-input" placeholder="Enter message">
-      </div>
-
-      <div class="input-section" id="qr-details" style="display: none;">
-        <div class="info-row">
-          <span class="info-label">Transaction Note:</span>
-          <span class="info-value" id="txn-note">-</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Transaction Ref:</span>
-          <span class="info-value" id="txn-ref">-</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Merchant Code:</span>
-          <span class="info-value" id="merchant-code">-</span>
-        </div>
+      <!-- Fixed: Question icon size -->
+      <div class="payment-help">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
       </div>
     </div>
 
-    <button class="pay-button" id="pay-btn" onclick="processPay()">PROCEED TO PAY</button>
+    <div class="payment-body">
+      <div class="main-card">
+        <div class="payee-header">
+          <div class="payee-avatar" id="payee-avatar">AT</div>
+          <div class="payee-details">
+            <div class="payee-name" id="payee-name">ABHISHEK VIJAYSHANKAR TIWARI</div>
+            <div class="payee-upi" id="payee-upi">9819833605-3@ybl</div>
+          </div>
+        </div>
+
+        <div class="bank-verification">
+          <span class="bank-label">Banking Name</span>
+          <div class="bank-name-group">
+            <span class="colon">:</span>
+            <span id="bank-name">ABHISHEK VIJAYSHANKAR TIWARI</span>
+            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          </div>
+        </div>
+
+        <div class="amount-wrapper">
+          <span class="rupee">₹</span>
+          <input type="number" inputmode="decimal" class="amount-input" id="amount-input" placeholder="Enter Amount" step="0.01" min="1">
+        </div>
+        <div class="amount-error" id="amount-error">Minimum amount is ₹1</div>
+
+        <div class="message-wrapper">
+          <input type="text" inputmode="text" class="message-input" id="message-input" placeholder="Add a message(optional)">
+        </div>
+      </div>
+    </div>
+
+    <button class="pay-button" id="pay-btn" disabled>PROCEED TO PAY</button>
   </div>
 
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-
   <script>
     let html5QrCode = null;
     let currentUpiData = null;
+    let torchOn = false;
 
-    // Parse UPI QR Code
     function parseUpiQr(qrString) {
-      console.log("Raw QR:", qrString);
-      
-      // Check if it's a UPI QR
-      if (!qrString.toLowerCase().startsWith('upi://pay')) {
-        throw new Error('Not a valid UPI QR code');
-      }
-
-      // Extract query parameters
+      if (!qrString.toLowerCase().startsWith('upi://pay')) throw new Error('Not a valid UPI QR code');
       const url = new URL(qrString.replace('upi://', 'https://'));
       const params = new URLSearchParams(url.search);
-
       const upiData = {
-        pa: params.get('pa') || '',  // Payee address (VPA)
-        pn: params.get('pn') || '',  // Payee name
-        am: params.get('am') || '',  // Amount
-        cu: params.get('cu') || 'INR',  // Currency
-        tn: params.get('tn') || '',  // Transaction note
-        tr: params.get('tr') || '',  // Transaction reference
-        mc: params.get('mc') || '',  // Merchant code
-        tid: params.get('tid') || '',  // Transaction ID
-        url: params.get('url') || '',  // URL for bill
-        mam: params.get('mam') || ''  // Minimum amount
+        pa: params.get('pa') || '',
+        pn: decodeURIComponent(params.get('pn') || '').replace(/\+/g, ' '),
+        am: params.get('am') || '',
+        tn: decodeURIComponent(params.get('tn') || '').replace(/\+/g, ' ')
       };
-
-      // Decode URL-encoded values
-      upiData.pn = decodeURIComponent(upiData.pn).replace(/\+/g, ' ');
-      upiData.tn = decodeURIComponent(upiData.tn).replace(/\+/g, ' ');
-
-      // Validate required fields
-      if (!upiData.pa || !upiData.pn) {
-        throw new Error('Missing required UPI fields (pa or pn)');
-      }
-
-      console.log("Parsed UPI Data:", upiData);
+      if (!upiData.pa || !upiData.pn) throw new Error('Missing fields');
       return upiData;
     }
 
-    // Show payment interface
     function showPaymentInterface(upiData) {
       currentUpiData = upiData;
-
-      // Update payee details
-      const initials = upiData.pn.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      const initials = upiData.pn.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
       document.getElementById('payee-avatar').textContent = initials;
       document.getElementById('payee-name').textContent = upiData.pn.toUpperCase();
       document.getElementById('payee-upi').textContent = upiData.pa;
+      document.getElementById('bank-name').textContent = upiData.pn.toUpperCase();
 
-      // Pre-fill amount if provided
       const amountInput = document.getElementById('amount-input');
-      if (upiData.am && upiData.am !== '') {
+      const payBtn = document.getElementById('pay-btn');
+      const errorEl = document.getElementById('amount-error');
+
+      if (upiData.am) {
         amountInput.value = parseFloat(upiData.am).toFixed(2);
-        amountInput.disabled = true;  // Fixed amount in dynamic QR
+        amountInput.disabled = true;
+        payBtn.classList.add('enabled');
+        payBtn.disabled = false;
+        errorEl.style.display = 'none';
       } else {
         amountInput.value = '';
-        amountInput.disabled = false;  // Editable for static QR
+        amountInput.disabled = false;
+        payBtn.classList.remove('enabled');
+        payBtn.disabled = true;
+        errorEl.style.display = 'none';
       }
 
-      // Show additional details if available
-      const detailsSection = document.getElementById('qr-details');
-      if (upiData.tn || upiData.tr || upiData.mc) {
-        detailsSection.style.display = 'block';
-        document.getElementById('txn-note').textContent = upiData.tn || '-';
-        document.getElementById('txn-ref').textContent = upiData.tr || '-';
-        document.getElementById('merchant-code').textContent = upiData.mc || '-';
-      } else {
-        detailsSection.style.display = 'none';
-      }
-
-      // Pre-fill message if provided
-      if (upiData.tn) {
-        document.getElementById('message-input').value = upiData.tn;
-      }
-
-      // Show payment view
+      document.getElementById('message-input').value = upiData.tn || '';
       document.getElementById('scanner-view').style.display = 'none';
       document.getElementById('payment-view').classList.add('active');
     }
 
-    // Back to scanner
+    // Fixed: Back button now correctly returns to scanner and restarts camera
     function backToScanner() {
       document.getElementById('payment-view').classList.remove('active');
       document.getElementById('scanner-view').style.display = 'block';
       currentUpiData = null;
-      startScanner();
+      startScanner(); // <-- This restarts the camera properly
     }
 
-    // Process payment
     function processPay() {
       const amount = document.getElementById('amount-input').value;
-      const message = document.getElementById('message-input').value;
-      const errorEl = document.getElementById('amount-error');
-
-      // Validate amount
-      if (!amount || parseFloat(amount) <= 0) {
-        errorEl.textContent = 'Please enter a valid amount';
+      if (!amount || parseFloat(amount) < 1) {
+        document.getElementById('amount-error').style.display = 'block';
         return;
       }
-
-      // Check minimum amount if specified
-      if (currentUpiData.mam && parseFloat(amount) < parseFloat(currentUpiData.mam)) {
-        errorEl.textContent = `Minimum amount is ₹${currentUpiData.mam}`;
-        return;
-      }
-
-      errorEl.textContent = '';
-
-      // Prepare payment data
-      const paymentData = {
-        ...currentUpiData,
-        amount: parseFloat(amount),
-        message: message,
-        timestamp: new Date().toISOString()
-      };
-
-      // In production, this would trigger actual UPI payment
-      console.log("Payment Data:", paymentData);
-      alert(`Payment Initiated!\n\nPayee: ${paymentData.pn}\nUPI ID: ${paymentData.pa}\nAmount: ₹${paymentData.amount}\n\nNote: This is a demo. In production, this would trigger the UPI payment flow.`);
-      
-      // Reset and go back
+      document.getElementById('amount-error').style.display = 'none';
+      alert(`Demo: Paying ₹${amount} to ${currentUpiData.pn}`);
       backToScanner();
     }
 
-    // Start scanner
-    function startScanner() {
-      if (html5QrCode) {
-        html5QrCode.stop().catch(() => {});
+    document.getElementById('amount-input').addEventListener('input', function () {
+      const value = parseFloat(this.value);
+      const payBtn = document.getElementById('pay-btn');
+      const errorEl = document.getElementById('amount-error');
+
+      if (this.disabled) return;
+
+      if (this.value === '' || (value >= 1)) {
+        payBtn.classList.add('enabled');
+        payBtn.disabled = false;
+        errorEl.style.display = 'none';
+      } else {
+        payBtn.classList.remove('enabled');
+        payBtn.disabled = true;
+        errorEl.style.display = 'block';
       }
+    });
 
+    function startScanner() {
+      if (html5QrCode) html5QrCode.stop().catch(() => {});
       html5QrCode = new Html5Qrcode("reader");
-
-      const config = {
-        fps: 10,
-        aspectRatio: 1,
-        facingMode: "environment"
-      };
+      const config = { fps: 10, qrbox: { width: 280, height: 280 } };
 
       html5QrCode.start(
         { facingMode: "environment" },
         config,
         (decodedText) => {
+          html5QrCode.stop();
           try {
-            html5QrCode.stop();
             const upiData = parseUpiQr(decodedText);
             showPaymentInterface(upiData);
-          } catch (error) {
-            alert("Error: " + error.message + "\n\nPlease scan a valid UPI QR code.");
-            console.error(error);
+          } catch (e) {
+            alert("Invalid QR: " + e.message);
+            startScanner();
           }
-        },
-        () => {}
-      ).catch((err) => {
-        alert("Camera access denied: " + err);
-      });
+        }
+      ).catch(err => alert("Camera error: " + err));
     }
 
-    // Initialize on load
-    startScanner();
-
-    // Torch Toggle
-    let torchOn = false;
-    document.getElementById("torch-btn").addEventListener("click", () => {
+    document.getElementById("torch-btn").onclick = () => {
       if (!html5QrCode) return;
       torchOn = !torchOn;
-      html5QrCode.applyVideoConstraints({
-        advanced: [{ torch: torchOn }]
-      }).catch(() => {});
-    });
+      html5QrCode.applyVideoConstraints({ advanced: [{ torch: torchOn }] }).catch(() => {});
+    };
 
-    // Upload QR
-    document.getElementById("upload-btn").addEventListener("click", () => {
-      const fileInput = document.createElement("input");
-      fileInput.type = "file";
-      fileInput.accept = "image/*";
-      fileInput.onchange = (e) => {
-        const file = e.target.files[0];
-        if (file && html5QrCode) {
-          html5QrCode.scanFileV2(file, true)
-            .then((result) => {
-              try {
-                const upiData = parseUpiQr(result.decodedText);
-                showPaymentInterface(upiData);
-              } catch (error) {
-                alert("Error: " + error.message);
-                console.error(error);
-              }
-            })
-            .catch(() => alert("No QR code found in image."));
-        }
+    document.getElementById("upload-btn").onclick = () => {
+      let i = document.createElement("input");
+      i.type = "file"; i.accept = "image/*";
+      i.onchange = e => {
+        let file = e.target.files[0];
+        html5QrCode.scanFileV2(file, true).then(r => {
+          showPaymentInterface(parseUpiQr(r.decodedText));
+        }).catch(() => alert("No QR found"));
       };
-      fileInput.click();
-    });
+      i.click();
+    };
 
-    // Validate amount input
-    document.getElementById('amount-input').addEventListener('input', function(e) {
-      const errorEl = document.getElementById('amount-error');
-      const value = parseFloat(e.target.value);
-      
-      if (e.target.value && (isNaN(value) || value <= 0)) {
-        errorEl.textContent = 'Invalid amount';
-      } else if (currentUpiData.mam && value < parseFloat(currentUpiData.mam)) {
-        errorEl.textContent = `Minimum amount is ₹${currentUpiData.mam}`;
-      } else {
-        errorEl.textContent = '';
-      }
-    });
+    window.onload = startScanner;
   </script>
-
 </body>
 </html>
