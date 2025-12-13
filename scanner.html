@@ -481,9 +481,9 @@
         throw new Error('Not a valid UPI QR code');
       }
 
-      // Extract query parameters - handle both upi:// and potential variations
-      let queryString = qrString.substring(qrString.indexOf('?') + 1);
-      const params = new URLSearchParams(queryString);
+      // Extract query parameters
+      const url = new URL(qrString.replace('upi://', 'https://'));
+      const params = new URLSearchParams(url.search);
 
       const upiData = {
         pa: params.get('pa') || '',  // Payee address (VPA)
@@ -498,13 +498,9 @@
         mam: params.get('mam') || ''  // Minimum amount
       };
 
-      // Decode URL-encoded values (handle both %20 and +)
-      if (upiData.pn) {
-        upiData.pn = decodeURIComponent(upiData.pn.replace(/\+/g, '%20'));
-      }
-      if (upiData.tn) {
-        upiData.tn = decodeURIComponent(upiData.tn.replace(/\+/g, '%20'));
-      }
+      // Decode URL-encoded values
+      upiData.pn = decodeURIComponent(upiData.pn).replace(/\+/g, ' ');
+      upiData.tn = decodeURIComponent(upiData.tn).replace(/\+/g, ' ');
 
       // Validate required fields
       if (!upiData.pa || !upiData.pn) {
