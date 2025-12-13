@@ -1,793 +1,827 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>PhonePe</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      height: 100%;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #F5F3F7;
-      overflow-x: hidden;
-    }
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>PhonePe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+        height: 100%;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #F5F3F7;
+        overflow-x: hidden;
+        }
 
-    /* Desktop Block - Force Mobile Only */
-    .desktop-block {
-      display: none;
-      position: fixed; inset: 0; background: #68217A; color: white;
-      align-items: center; justify-content: center; text-align: center;
-      z-index: 9999; padding: 40px; flex-direction: column; gap: 20px;
-    }
-    .desktop-block img { width: 90px; filter: brightness(0) invert(1); }
+        /* Hide scrollbar but keep scrolling functionality */
 
-    @media (min-width: 768px) {
-      body > *:not(.desktop-block) { display: none; }
-      .desktop-block { display: flex; }
-    }
+/* For WebKit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 0px;  /* For vertical scrollbar */
+  height: 0px; /* For horizontal scrollbar (optional) */
+  background: transparent; /* Optional: make track transparent */
+}
 
-    /* Banner */
-    .banner {
-      background: linear-gradient(135deg, #68217A, #8E4B9F);
-      color: white;
-      padding: 20px 16px 50px;
-      position: relative;
-      overflow: hidden;
-    }
-    .banner::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      width: 100%;
-      height: 40px;
-      background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg"><path fill="%23F5F3F7" d="M0,120 C360,60 1080,180 1440,120 L1440,120 L0,120 Z"></path></svg>') no-repeat bottom;
-      background-size: cover;
-    }
+::-webkit-scrollbar-thumb {
+  background: transparent;
+}
 
-    .banner-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 2px solid white;
-      overflow: hidden;
-    }
-    .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .help-icon {
-      width: 36px;
-      height: 36px;
-      background: rgba(24, 23, 23, 0.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-    }
+/* For Firefox */
+html {
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+  -ms-overflow-style: none; /* Hides scrollbar in older IE/Edge */
+}
 
-    .banner-content { text-align: center; }
-    .banner-subtitle { font-size: 14px; opacity: 0.9; margin-bottom: 8px; }
-    .banner-title { font-size: 24px; font-weight: 700; margin-bottom: 12px; line-height: 1.2; }
-    .banner-amount { font-size: 18px; opacity: 0.9; margin-bottom: 24px; }
-    .start-btn {
-      display: inline-flex;
-      margin: 0 auto;
-      background: white;
-      color: #68217A;
-      padding: 14px 36px;
-      border-radius: 30px;
-      font-weight: 700;
-      font-size: 16px;
-      text-decoration: none;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .start-btn::after { content: '→'; font-size: 20px; }
+/* For older Edge and IE */
+body {
+  -ms-overflow-style: none;
+}
 
-    /* Sections */
-    .section {
-      padding: 20px 16px;
-      background: #ffffff;
-    }
-    .section-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      color: #1A1A1A;
-    }
+/* Alternative: Hide only on body/html */
+body, html {
+  overflow: -moz-scrollbars-none; /* Old Firefox */
+  -ms-overflow-style: none;
+}
 
-    /* Grid */
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .grid-item { text-align: center; }
-    .grid-icon {
-      width: 54px;
-      height: 54px;
-      background: white;
-      border-radius: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 12px;
-      overflow: hidden;
-    }
-    .grid-icon img {
-      width: 40px;
-      height: 35px;
-      object-fit: contain;
-    }
-    .grid-label {
-      font-size: 13px;
-      font-weight: 500;
-      color: #000000;
-      line-height: 1.3;
-    }
+::-webkit-scrollbar {
+  display: none;
+}
 
-    /* Offers Carousel - New Scrollable Banners */
-    .offers-carousel {
-      position: relative;
-      margin-bottom: 24px;
-      overflow: hidden;
-    }
+        /* Desktop Block - Force Mobile Only */
+        .desktop-block {
+        display: none;
+        position: fixed; inset: 0; background: #68217A; color: white;
+        align-items: center; justify-content: center; text-align: center;
+        z-index: 9999; padding: 40px; flex-direction: column; gap: 20px;
+        }
+        .desktop-block img { width: 90px; filter: brightness(0) invert(1); }
 
-    .offers-container {
-      display: flex;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      gap: 12px;
-      padding: 0 16px;
-      scroll-behavior: smooth;
-    }
+        @media (min-width: 768px) {
+        body > *:not(.desktop-block) { display: none; }
+        .desktop-block { display: flex; }
+        }
 
-    .offers-container::-webkit-scrollbar {
-      display: none;
-    }
+        /* Banner */
+        .banner {
+        background: linear-gradient(135deg, #68217A, #8E4B9F);
+        color: white;
+        padding: 20px 16px 50px;
+        position: relative;
+        overflow: hidden;
+        }
+        .banner::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 100%;
+        height: 40px;
+        background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg"><path fill="%23F5F3F7" d="M0,120 C360,60 1080,180 1440,120 L1440,120 L0,120 Z"></path></svg>') no-repeat bottom;
+        background-size: cover;
+        }
 
-    .offers-container {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
+        .banner-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        }
+        .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid white;
+        overflow: hidden;
+        }
+        .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .help-icon {
+        width: 36px;
+        height: 36px;
+        background: rgba(24, 23, 23, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        }
 
-    .offer-banner {
-      flex: 0 0 98%; /* Shows one main banner + a peek of next */
-      min-width: 0;
-      background: #e8f7e8;
-      border-radius: 16px;
-      border: 1px solid #d1dfd1;
-      padding: 12px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      scroll-snap-align: start;
-    }
+        .banner-content { text-align: center; }
+        .banner-subtitle { font-size: 14px; opacity: 0.9; margin-bottom: 8px; }
+        .banner-title { font-size: 24px; font-weight: 700; margin-bottom: 12px; line-height: 1.2; }
+        .banner-amount { font-size: 18px; opacity: 0.9; margin-bottom: 24px; }
+        .start-btn {
+        display: inline-flex;
+        margin: 0 auto;
+        background: white;
+        color: #68217A;
+        padding: 14px 36px;
+        border-radius: 30px;
+        font-weight: 700;
+        font-size: 16px;
+        text-decoration: none;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .start-btn::after { content: '→'; font-size: 20px; }
 
-    .offer-text {
-      font-size: 14px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #1A1A1A;
-    }
-    .offer-text img { height: 30px; }
-    .offer-icon img { height: 16px; }
+        /* Sections */
+        .section {
+        padding: 20px 16px;
+        background: #ffffff;
+        }
+        .section-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #1A1A1A;
+        }
 
-    /* Carousel Dots */
-    .carousel-dots {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 12px;
-    }
-    .dot {
-      width: 8px;
-      height: 8px;
-      background: #CCC;
-      border-radius: 50%;
-      transition: background 0.3s;
-    }
-    .dot.active {
-      background: #68217A;
-    }
+        /* Grid */
+        .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+        }
+        .grid-item { text-align: center; }
+        .grid-icon {
+        width: 54px;
+        height: 54px;
+        background: white;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 12px;
+        overflow: hidden;
+        }
+        .grid-icon img {
+        width: 40px;
+        height: 35px;
+        object-fit: contain;
+        }
+        .grid-label {
+        font-size: 13px;
+        font-weight: 500;
+        color: #000000;
+        line-height: 1.3;
+        }
 
-    /* Recharge & Bills */
-    .recharge-grid {
-      background: #f6f7f6;
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    .recharge-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .view-all {
-      color: #68217A;
-      font-weight: 600;
-      font-size: 14px;
-      text-decoration: none;
-    }
+        /* Offers Carousel - New Scrollable Banners */
+        .offers-carousel {
+        position: relative;
+        margin-bottom: 24px;
+        overflow: hidden;
+        }
 
-    /* Unified Service Cards */
-    .service-cards {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .service-card {
-      background: #f9f9fb;
-      border-radius: 16px;
-      padding: 14px 16px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      position: relative;
-      min-height: 120px;
-    }
-    .service-card-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: #1A1A1A;
-    }
-    .service-card-subtitle {
-      font-size: 13px;
-      color: #555;
-    }
-    .service-card-badge {
-      position: absolute;
-      top: 10px;
-      right: 12px;
-      background: #e8d8ff;
-      color: #68217A;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 8px;
-      font-weight: 600;
-    }
-    .service-card-img {
-      align-self: flex-end;
-      width: 46px;
-      height: auto;
-      margin-top: 0px;
-    }
+        .offers-container {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        gap: 12px;
+        padding: 0 16px;
+        scroll-behavior: smooth;
+        }
 
-    /* Did You Know Banner */
-    .dyk-banner {
-      background: #220543;
-      border-radius: 16px;
-      padding: 24px;
-      color: white;
-      text-align: left;
-      margin-bottom: 24px;
-      position: relative;
-      overflow: hidden;
-    }
-    .dyk-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .dyk-title::after {
-      content: '→';
-      margin-left: auto;
-      font-size: 20px;
-    }
-    .dyk-text {
-      font-size: 14px;
-    }
-    .dyk-img {
-      position: absolute;
-      right: 8px;
-      bottom: 8px;
-      width: 80px;
-      opacity: 0.9;
-    }
+        .offers-container::-webkit-scrollbar {
+        display: none;
+        }
 
-    /* Manage Payments Section */
-    .manage-payments {
-      background: #f9f9fb;
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 24px;
-    }
-    .manage-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .manage-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: #1A1A1A;
-    }
-    .manage-view-all {
-      color: #68217A;
-      font-size: 14px;
-      font-weight: 600;
-    }
-    .manage-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      text-align: center;
-    }
-    .manage-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-    .manage-icon {
-      width: 56px;
-      height: 56px;
-      background: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      position: relative;
-    }
-    .manage-icon img {
-      width: 32px;
-      height: 32px;
-    }
-    .manage-label {
-      font-size: 13px;
-      color: #333;
-    }
-    .manage-badge {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      background: #ff0000;
-      color: white;
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 12px;
-      font-weight: 600;
-    }
+        .offers-container {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        }
 
-    /* New UPI QR Code Section */
-    .upi-qr-section {
-      background: white;
-      border-radius: 24px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      padding: 24px;
-      text-align: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      margin: 0 16px 100px 16px;
-      position: relative;
-    }
-    .upi-qr-bank {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 0px;
-      font-size: 16px;
-      color: #333;
-      font-weight: 600;
-    }
-    .upi-qr-bank img {
-      width: 32px;
-      height: 32px;
-    }
-    .upi-qr-container {
-      position: relative;
-      display: inline-block;
-      margin-bottom: 10px;
-    }
-    .upi-qr-container img.qr-code {
-      width: 240px;
-      height: 240px;
-      border-radius: 16px;
-    }
-    .upi-qr-overlay {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 60px;
-      height: 60px;
-      background: #333;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 32px;
-      font-weight: bold;
-    }
-    .upi-id {
-      background: #f0f0f0;
-      border-radius: 12px;
-      padding: 10px 16px;
-      font-size: 14px;
-      color: #555;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-    .upi-id::after {
-      content: '📋';
-    }
-    .view-upi-details {
-      color: #68217A;
-      font-size: 16px;
-      font-weight: 600;
-      text-decoration: none;
-    }
+        .offer-banner {
+        flex: 0 0 98%; /* Shows one main banner + a peek of next */
+        min-width: 0;
+        background: #e8f7e8;
+        border-radius: 16px;
+        border: 1px solid #d1dfd1;
+        padding: 12px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        scroll-snap-align: start;
+        }
 
-    /* Bottom Navigation */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 80px;
-      background: white;
-      display: flex;
-      justify-content: space-around;
-      align-items: flex-end;
-      padding: 8px 0 16px;
-      box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
-      z-index: 100;
-    }
-    .nav-items-container {
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-      position: relative;
-    }
-    .nav-item {
-      text-align: center;
-      color: #999;
-      font-size: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-    }
-    .nav-item.active { color: #68217A; }
-    .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; }
+        .offer-text {
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #1A1A1A;
+        }
+        .offer-text img { height: 30px; }
+        .offer-icon img { height: 16px; }
 
-    /* Center Scan Button */
-    .center-scan {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: -3px;
-      z-index: 10;
-    }
-    .center-icon {
-      background: #680dc5;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 16px rgba(104,33,122,0.4);
-    }
-    .center-icon img {
-      width: 32px;
-      height: 32px;
-      filter: invert(1);
-    }
+        /* Carousel Dots */
+        .carousel-dots {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 12px;
+        }
+        .dot {
+        width: 8px;
+        height: 8px;
+        background: #CCC;
+        border-radius: 50%;
+        transition: background 0.3s;
+        }
+        .dot.active {
+        background: #68217A;
+        }
 
-    .alert-badge {
-      position: absolute;
-      top: -4px;
-      right: -8px;
-      background: #4CAF50;
-      color: white;
-      font-size: 10px;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .alert-wrapper { position: relative; }
-  </style>
-</head>
-<body>
+        /* Recharge & Bills */
+        .recharge-grid {
+        background: #f6f7f6;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .recharge-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        }
+        .view-all {
+        color: #68217A;
+        font-weight: 600;
+        font-size: 14px;
+        text-decoration: none;
+        }
 
-  <!-- Desktop Block -->
-  <div class="desktop-block">
-    <img src="https://www.phonepe.com/web-static/img/phonepe_logo.svg" alt="PhonePe">
-    <h1>Desktop Not Supported</h1>
-    <p>Please open on your mobile phone</p>
-  </div>
+        /* Unified Service Cards */
+        .service-cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+        }
+        .service-card {
+        background: #f9f9fb;
+        border-radius: 16px;
+        padding: 14px 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        position: relative;
+        min-height: 120px;
+        }
+        .service-card-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #1A1A1A;
+        }
+        .service-card-subtitle {
+        font-size: 13px;
+        color: #555;
+        }
+        .service-card-badge {
+        position: absolute;
+        top: 10px;
+        right: 12px;
+        background: #e8d8ff;
+        color: #68217A;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 8px;
+        font-weight: 600;
+        }
+        .service-card-img {
+        align-self: flex-end;
+        width: 46px;
+        height: auto;
+        margin-top: 0px;
+        }
 
-  <!-- Banner -->
-  <section class="banner">
-    <div class="banner-header">
-      <div class="user-avatar">
-        <img src="profile.png" alt="User">
-      </div>
-      <div class="help-icon">?</div>
-    </div>
-    <div class="banner-content">
-      <div class="banner-subtitle">Start saving in 24K gold every day</div>
-      <div class="banner-title">Daily Savings<br>in Gold</div>
-      <div class="banner-amount">Start as low as ₹10 per day</div>
-      <a href="#" class="start-btn">Start Saving</a>
-    </div>
-  </section>
+        /* Did You Know Banner */
+        .dyk-banner {
+        background: #220543;
+        border-radius: 16px;
+        padding: 24px;
+        color: white;
+        text-align: left;
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+        }
+        .dyk-title {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        }
+        .dyk-title::after {
+        content: '→';
+        margin-left: auto;
+        font-size: 20px;
+        }
+        .dyk-text {
+        font-size: 14px;
+        }
+        .dyk-img {
+        position: absolute;
+        right: 8px;
+        bottom: 8px;
+        width: 80px;
+        opacity: 0.9;
+        }
 
-  <!-- Main Content -->
-  <section class="section">
-    <h2 class="section-title">Money Transfers</h2>
-    <div class="grid-4">
-      <div class="grid-item">
-        <div style="background-color: #680dc5;" class="grid-icon">
-          <img src="to phone.png" alt="To Mobile Number">
-        </div>
-        <div class="grid-label">To Mobile<br>Number</div>
-      </div>
-      <div class="grid-item">
-        <div style="background-color: #680dc5;" class="grid-icon">
-          <img src="https://img.icons8.com/external-flatart-icons-outline-flatarticons/64/FFFFFF/external-bank-investment-flatart-icons-outline-flatarticons.png" alt="To Bank & Self A/c">
-        </div>
-        <div class="grid-label">To Bank &<br>Self A/c</div>
-      </div>
-      <div class="grid-item">
-        <div style="background-color: #680dc5;" class="grid-icon">
-          <img src="https://img.icons8.com/ios-filled/50/FFFFFF/speaker_1.png" alt="Refer & Get ₹100">
-        </div>
-        <div class="grid-label">Refer & Get<br>₹100</div>
-      </div>
-      <div class="grid-item">
-        <div style="background-color: #680dc5;" class="grid-icon">
-          <img src="https://img.icons8.com/comic/100/FFFFFF/rupee.png" alt="Check Balance">
-        </div>
-        <div class="grid-label">Check<br>Balance</div>
-      </div>
+        /* Manage Payments Section */
+        .manage-payments {
+        background: #f9f9fb;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 24px;
+        }
+        .manage-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        }
+        .manage-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1A1A1A;
+        }
+        .manage-view-all {
+        color: #68217A;
+        font-size: 14px;
+        font-weight: 600;
+        }
+        .manage-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        text-align: center;
+        }
+        .manage-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        }
+        .manage-icon {
+        width: 56px;
+        height: 56px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        position: relative;
+        }
+        .manage-icon img {
+        width: 32px;
+        height: 32px;
+        }
+        .manage-label {
+        font-size: 13px;
+        color: #333;
+        }
+        .manage-badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        background: #ff0000;
+        color: white;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 12px;
+        font-weight: 600;
+        }
+
+        /* New UPI QR Code Section */
+        .upi-qr-section {
+        background: white;
+        border-radius: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 24px;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        margin: 0 16px 100px 16px;
+        position: relative;
+        }
+        .upi-qr-bank {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 0px;
+        font-size: 16px;
+        color: #333;
+        font-weight: 600;
+        }
+        .upi-qr-bank img {
+        width: 32px;
+        height: 32px;
+        }
+        .upi-qr-container {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 10px;
+        }
+        .upi-qr-container img.qr-code {
+        width: 240px;
+        height: 240px;
+        border-radius: 16px;
+        }
+        .upi-qr-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60px;
+        height: 60px;
+        background: #333;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 32px;
+        font-weight: bold;
+        }
+        .upi-id {
+        background: #f0f0f0;
+        border-radius: 12px;
+        padding: 10px 16px;
+        font-size: 14px;
+        color: #555;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;   
+        margin-bottom: 16px;
+        }
+        .upi-id::after {
+        content: '📋';
+        }
+        .view-upi-details {
+        color: #68217A;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 80px;
+        background: white;
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-end;
+        padding: 8px 0 16px;
+        box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+        z-index: 100;
+        }
+        .nav-items-container {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        position: relative;
+        }
+        .nav-item {
+        text-align: center;
+        color: #999;
+        font-size: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        }
+        .nav-item.active { color: #68217A; }
+        .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; }
+
+        /* Center Scan Button */
+        .center-scan {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -3px;
+        z-index: 10;
+        }
+        .center-icon {
+        background: #680dc5;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 16px rgba(104,33,122,0.4);
+        }
+        .center-icon img {
+        width: 32px;
+        height: 32px;
+        filter: invert(1);
+        }
+
+        .alert-badge {
+        position: absolute;
+        top: -4px;
+        right: -8px;
+        background: #4CAF50;
+        color: white;
+        font-size: 10px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        }
+        .alert-wrapper { position: relative; }
+    </style>
+    </head>
+    <body>
+
+    <!-- Desktop Block -->
+    <div class="desktop-block">
+        <img src="https://www.phonepe.com/web-static/img/phonepe_logo.svg" alt="PhonePe">
+        <h1>Desktop Not Supported</h1>
+        <p>Please open on your mobile phone</p>
     </div>
 
-    <!-- New Scrollable Offer Banners Carousel -->
-    <div class="offers-carousel">
-      <div class="offers-container">
-        <!-- Banner 1 -->
-        <div class="offer-banner">
-          <div class="offer-text">
-            <img src="https://img.icons8.com/glyph-neue/64/40C057/discount.png" alt="Discount">
-            20% Off* on Health Insurance
-          </div>
-          <div class="offer-icon">
-            <img src="arrow.png" alt="→">
-          </div>
+    <!-- Banner -->
+    <section class="banner">
+        <div class="banner-header">
+        <div class="user-avatar">
+            <img src="profile.png" alt="User">
         </div>
-
-        <!-- Banner 2 -->
-        <div class="offer-banner">
-          <div class="offer-text">
-            <img src="https://img.icons8.com/fluency/64/FFC107/gift.png" alt="Gift">
-            Get ₹100 Cashback on First Recharge
-          </div>
-          <div class="offer-icon">
-            <img src="arrow.png" alt="→">
-          </div>
+        <div class="help-icon">?</div>
         </div>
-
-        <!-- Banner 3 -->
-        <div class="offer-banner">
-          <div class="offer-text">
-            <img src="https://img.icons8.com/color/64/FF6B6B/sale.png" alt="Sale">
-            Flat ₹500 Off on Flight Bookings
-          </div>
-          <div class="offer-icon">
-            <img src="arrow.png" alt="→">
-          </div>
+        <div class="banner-content">
+        <div class="banner-subtitle">Start saving in 24K gold every day</div>
+        <div class="banner-title">Daily Savings<br>in Gold</div>
+        <div class="banner-amount">Start as low as ₹10 per day</div>
+        <a href="#" class="start-btn">Start Saving</a>
         </div>
-      </div>
+    </section>
 
-      <!-- Dots Indicator -->
-      <div class="carousel-dots">
-        <span class="dot active"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-      </div>
-    </div>
-
-    <div class="recharge-grid">
-      <div class="recharge-header">
-        <h2 class="section-title">Recharge & Bills</h2>
-        <a href="#" class="view-all">View All</a>
-      </div>
-      <div class="grid-4">
+    <!-- Main Content -->
+    <section class="section">
+        <h2 class="section-title">Money Transfers</h2>
+        <div class="grid-4">
         <div class="grid-item">
-          <div class="grid-icon">
-            <img src="https://img.icons8.com/fluency-systems-regular/48/7950F2/iphone13.png" alt="Mobile Recharge">
-          </div>
-          <div class="grid-label">Mobile<br>Recharge</div>
+            <div style="background-color: #680dc5;" class="grid-icon">
+            <img src="to phone.png" alt="To Mobile Number">
+            </div>
+            <div class="grid-label">To Mobile<br>Number</div>
         </div>
         <div class="grid-item">
-          <div class="grid-icon">
-            <img src="https://img.icons8.com/ios/50/7950F2/bank-card-back-side--v1.png" alt="Credit Card Bill">
-          </div>
-          <div class="grid-label">Credit Card<br>Bill</div>
+            <div style="background-color: #680dc5;" class="grid-icon">
+            <img src="https://img.icons8.com/external-flatart-icons-outline-flatarticons/64/FFFFFF/external-bank-investment-flatart-icons-outline-flatarticons.png" alt="To Bank & Self A/c">
+            </div>
+            <div class="grid-label">To Bank &<br>Self A/c</div>
         </div>
         <div class="grid-item">
-          <div class="grid-icon">
-            <img src="https://img.icons8.com/wired/64/7950F2/idea.png" alt="Electricity Bill">
-          </div>
-          <div class="grid-label">Electricity<br>Bill</div>
+            <div style="background-color: #680dc5;" class="grid-icon">
+            <img src="https://img.icons8.com/ios-filled/50/FFFFFF/speaker_1.png" alt="Refer & Get ₹100">
+            </div>
+            <div class="grid-label">Refer & Get<br>₹100</div>
         </div>
         <div class="grid-item">
-          <div class="grid-icon">
-            <img src="https://img.icons8.com/ios/50/7950F2/money-bag-rupee.png" alt="Loan Repayment">
-          </div>
-          <div class="grid-label">Loan<br>Repayment</div>
+            <div style="background-color: #680dc5;" class="grid-icon">
+            <img src="https://img.icons8.com/comic/100/FFFFFF/rupee.png" alt="Check Balance">
+            </div>
+            <div class="grid-label">Check<br>Balance</div>
         </div>
-      </div>
-    </div>
-
-    <!-- Unified Service Cards -->
-    <div class="service-cards">
-      <div class="service-card">
-        <div class="service-card-title">Loans</div>
-        <div class="service-card-subtitle">Gold Loan</div>
-        <div class="service-card-badge">Gold Loan</div>
-        <img class="service-card-img" src="https://img.icons8.com/comic/100/FAB005/gold-bars.png" alt="Gold Loan">
-      </div>
-      <div class="service-card">
-        <div class="service-card-title">Insurance</div>
-        <div class="service-card-subtitle"></div>
-        <div class="service-card-badge">Offer</div>
-        <img class="service-card-img" src="https://img.icons8.com/external-tal-revivo-bold-tal-revivo/100/228BE6/external-motor-car-insurance-by-private-company-isolated-on-white-background-protection-bold-tal-revivo.png" alt="Insurance">
-      </div>
-      <div class="service-card">
-        <div class="service-card-title">Gold & Silver</div>
-        <div class="service-card-subtitle">Save ₹10 daily</div>
-        <img class="service-card-img" src="money.png" alt="Gold & Silver">
-      </div>
-      <div class="service-card">
-        <div class="service-card-title">Travel & Transit</div>
-        <div class="service-card-subtitle">Flight, Train, Bus, Hotel, Metro</div>
-        <div class="service-card-badge">Sale</div>
-        <img class="service-card-img" src="train.png" alt="Travel">
-      </div>
-      <div class="service-card">
-        <div class="service-card-title">Mutual Funds</div>
-        <div class="service-card-subtitle">SIPs & Investments</div>
-        <img class="service-card-img" src="profits.png" alt="Mutual Funds">
-      </div>
-    </div>
-
-    <!-- Did You Know Banner -->
-    <div class="dyk-banner">
-      <div class="dyk-title">Did you know?</div>
-      <div class="dyk-text">100+ Rewards await you</div>
-      <img class="dyk-img" src="gift-box.png" alt="Rewards">
-    </div>
-
-    <!-- Manage Payments Section -->
-    <div class="manage-payments">
-      <div class="manage-header">
-        <div class="manage-title">Manage Payments</div>
-        <a style="text-decoration: none;" href="#" class="manage-view-all">View All</a>
-      </div>
-      <div class="manage-grid">
-        <div class="manage-item">
-          <div class="manage-icon">
-            <img width="24" height="24" src="https://img.icons8.com/external-tal-revivo-bold-tal-revivo/24/FD7E14/external-wallet-full-of-cash-isolated-on-a-white-background-money-bold-tal-revivo.png" alt="Wallet">
-          </div>
-          <div class="manage-label">Wallet</div>
         </div>
-        <div class="manage-item">
-          <div class="manage-icon">
-            <img style="width: 50px; height: 50px;" src="upilite.png" alt="UPI Lite">
-          </div>
-          <div class="manage-label">UPI Lite</div>
+
+        <!-- New Scrollable Offer Banners Carousel -->
+        <div class="offers-carousel">
+        <div class="offers-container">
+            <!-- Banner 1 -->
+            <div class="offer-banner">
+            <div class="offer-text">
+                <img src="https://img.icons8.com/glyph-neue/64/40C057/discount.png" alt="Discount">
+                20% Off* on Health Insurance
+            </div>
+            <div class="offer-icon">
+                <img src="arrow.png" alt="→">
+            </div>
+            </div>
+
+            <!-- Banner 2 -->
+            <div class="offer-banner">
+            <div class="offer-text">
+                <img src="https://img.icons8.com/fluency/64/FFC107/gift.png" alt="Gift">
+                Get ₹100 Cashback on First Recharge
+            </div>
+            <div class="offer-icon">
+                <img src="arrow.png" alt="→">
+            </div>
+            </div>
+
+            <!-- Banner 3 -->
+            <div class="offer-banner">
+            <div class="offer-text">
+                <img src="https://img.icons8.com/color/64/FF6B6B/sale.png" alt="Sale">
+                Flat ₹500 Off on Flight Bookings
+            </div>
+            <div class="offer-icon">
+                <img src="arrow.png" alt="→">
+            </div>
+            </div>
         </div>
-        <div class="manage-item">
-          <div class="manage-icon">
-            <img src="https://img.icons8.com/emoji/48/credit-card-emoji.png" alt="PhonePe HDFC Card">
-            <span class="manage-badge">Free</span>
-          </div>
-          <div class="manage-label">PhonePe<br>HDFC card</div>
+
+        <!-- Dots Indicator -->
+        <div class="carousel-dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
         </div>
-        <div class="manage-item">
-          <div class="manage-icon">
-            <img src="https://img.icons8.com/glyph-neue/64/credit-card-front.png" alt="PhonePe SBI Card">
-          </div>
-          <div class="manage-label">PhonePe<br>SBI card</div>
         </div>
-      </div>
-    </div>
 
-    <!-- UPI QR Code Section -->
-    <div class="upi-qr-section">
-      <div class="upi-qr-bank">
-        <img src="federal-bank-app-icon.webp" alt="Bank Logo">
-        Federal Bank - 2071
-      </div>
-      <div class="upi-qr-container">
-        <img class="qr-code" src="qr.jpg" alt="UPI QR Code">
-      </div>
-      <div class="upi-id">
-        UPI ID: 9819833605-3@ybl
-      </div>
-      <a href="#" class="view-upi-details">View UPI details</a>
-    </div>
-  </section>
-
-  <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
-    <div class="nav-items-container">
-      <div class="nav-item active">
-        <img src="home.png" alt="Home">
-        <div>Home</div>
-      </div>
-      <div class="nav-item">
-        <img width="50" height="50" src="https://img.icons8.com/ios-filled/50/1A1A1A/search--v1.png" alt="Search">
-        <div>Search</div>
-      </div>
-      <div></div>
-      <div class="nav-item">
-        <div class="alert-wrapper">
-          <img src="bell.png" alt="Alerts">
-          <div class="alert-badge">1</div>
+        <div class="recharge-grid">
+        <div class="recharge-header">
+            <h2 class="section-title">Recharge & Bills</h2>
+            <a href="#" class="view-all">View All</a>
         </div>
-        <div>Alerts</div>
-      </div>
-      <div class="nav-item">
-        <img src="clock.png" alt="History">
-        <div>History</div>
-      </div>
-      <div class="center-scan">
-        <div class="center-icon">
-          <img src="scanner.png" alt="Scan QR">
+        <div class="grid-4">
+            <div class="grid-item">
+            <div class="grid-icon">
+                <img src="https://img.icons8.com/fluency-systems-regular/48/7950F2/iphone13.png" alt="Mobile Recharge">
+            </div>
+            <div class="grid-label">Mobile<br>Recharge</div>
+            </div>
+            <div class="grid-item">
+            <div class="grid-icon">
+                <img src="https://img.icons8.com/ios/50/7950F2/bank-card-back-side--v1.png" alt="Credit Card Bill">
+            </div>
+            <div class="grid-label">Credit Card<br>Bill</div>
+            </div>
+            <div class="grid-item">
+            <div class="grid-icon">
+                <img src="https://img.icons8.com/wired/64/7950F2/idea.png" alt="Electricity Bill">
+            </div>
+            <div class="grid-label">Electricity<br>Bill</div>
+            </div>
+            <div class="grid-item">
+            <div class="grid-icon">
+                <img src="https://img.icons8.com/ios/50/7950F2/money-bag-rupee.png" alt="Loan Repayment">
+            </div>
+            <div class="grid-label">Loan<br>Repayment</div>
+            </div>
         </div>
-      </div>
-    </div>
-  </nav>
+        </div>
 
-  <!-- JavaScript for Carousel Dots -->
-  <script>
-    const container = document.querySelector('.offers-container');
-    const dots = document.querySelectorAll('.dot');
+        <!-- Unified Service Cards -->
+        <div class="service-cards">
+        <div class="service-card">
+            <div class="service-card-title">Loans</div>
+            <div class="service-card-subtitle">Gold Loan</div>
+            <div class="service-card-badge">Gold Loan</div>
+            <img class="service-card-img" src="https://img.icons8.com/comic/100/FAB005/gold-bars.png" alt="Gold Loan">
+        </div>
+        <div class="service-card">
+            <div class="service-card-title">Insurance</div>
+            <div class="service-card-subtitle"></div>
+            <div class="service-card-badge">Offer</div>
+            <img class="service-card-img" src="https://img.icons8.com/external-tal-revivo-bold-tal-revivo/100/228BE6/external-motor-car-insurance-by-private-company-isolated-on-white-background-protection-bold-tal-revivo.png" alt="Insurance">
+        </div>
+        <div class="service-card">
+            <div class="service-card-title">Gold & Silver</div>
+            <div class="service-card-subtitle">Save ₹10 daily</div>
+            <img class="service-card-img" src="money.png" alt="Gold & Silver">
+        </div>
+        <div class="service-card">
+            <div class="service-card-title">Travel & Transit</div>
+            <div class="service-card-subtitle">Flight, Train, Bus, Hotel, Metro</div>
+            <div class="service-card-badge">Sale</div>
+            <img class="service-card-img" src="train.png" alt="Travel">
+        </div>
+        <div class="service-card">
+            <div class="service-card-title">Mutual Funds</div>
+            <div class="service-card-subtitle">SIPs & Investments</div>
+            <img class="service-card-img" src="profits.png" alt="Mutual Funds">
+        </div>
+        </div>
 
-    container.addEventListener('scroll', () => {
-      const scrollLeft = container.scrollLeft;
-      const width = container.clientWidth;
-      const index = Math.round(scrollLeft / width);
+        <!-- Did You Know Banner -->
+        <div class="dyk-banner">
+        <div class="dyk-title">Did you know?</div>
+        <div class="dyk-text">100+ Rewards await you</div>
+        <img class="dyk-img" src="gift-box.png" alt="Rewards">
+        </div>
 
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === index);
-      });
-    });
-  </script>
+        <!-- Manage Payments Section -->
+        <div class="manage-payments">
+        <div class="manage-header">
+            <div class="manage-title">Manage Payments</div>
+            <a style="text-decoration: none;" href="#" class="manage-view-all">View All</a>
+        </div>
+        <div class="manage-grid">
+            <div class="manage-item">
+            <div class="manage-icon">
+                <img width="24" height="24" src="https://img.icons8.com/external-tal-revivo-bold-tal-revivo/24/FD7E14/external-wallet-full-of-cash-isolated-on-a-white-background-money-bold-tal-revivo.png" alt="Wallet">
+            </div>
+            <div class="manage-label">Wallet</div>
+            </div>
+            <div class="manage-item">
+            <div class="manage-icon">
+                <img style="width: 50px; height: 50px;" src="upilite.png" alt="UPI Lite">
+            </div>
+            <div class="manage-label">UPI Lite</div>
+            </div>
+            <div class="manage-item">
+            <div class="manage-icon">
+                <img src="https://img.icons8.com/emoji/48/credit-card-emoji.png" alt="PhonePe HDFC Card">
+                <span class="manage-badge">Free</span>
+            </div>
+            <div class="manage-label">PhonePe<br>HDFC card</div>
+            </div>
+            <div class="manage-item">
+            <div class="manage-icon">
+                <img src="https://img.icons8.com/glyph-neue/64/credit-card-front.png" alt="PhonePe SBI Card">
+            </div>
+            <div class="manage-label">PhonePe<br>SBI card</div>
+            </div>
+        </div>
+        </div>
 
-</body>
-</html>
+        <!-- UPI QR Code Section -->
+        <div class="upi-qr-section">
+        <div class="upi-qr-bank">
+            <img src="federal-bank-app-icon.webp" alt="Bank Logo">
+            Federal Bank - 2071
+        </div>
+        <div class="upi-qr-container">
+            <img class="qr-code" src="qr.jpg" alt="UPI QR Code">
+        </div>
+        <div class="upi-id">
+            UPI ID: 9819833605-3@ybl
+        </div>
+        <a href="#" class="view-upi-details">View UPI details</a>
+        </div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-items-container">
+        <div class="nav-item active">
+            <img src="home.png" alt="Home">
+            <div>Home</div>
+        </div>
+        <div class="nav-item">
+            <img width="50" height="50" src="https://img.icons8.com/ios-filled/50/1A1A1A/search--v1.png" alt="Search">
+            <div>Search</div>
+        </div>
+        <div></div>
+        <div class="nav-item">
+            <div class="alert-wrapper">
+            <img src="bell.png" alt="Alerts">
+            <div class="alert-badge">1</div>
+            </div>
+            <div>Alerts</div>
+        </div>
+        <div class="nav-item">
+            <img src="clock.png" alt="History">
+            <div>History</div>
+        </div>
+        <div class="center-scan">
+            <div class="center-icon">
+            <img src="scanner.png" alt="Scan QR">
+            </div>
+        </div>
+        </div>
+    </nav>
+
+    <!-- JavaScript for Carousel Dots -->
+    <script>
+        const container = document.querySelector('.offers-container');
+        const dots = document.querySelectorAll('.dot');
+
+        container.addEventListener('scroll', () => {
+        const scrollLeft = container.scrollLeft;
+        const width = container.clientWidth;
+        const index = Math.round(scrollLeft / width);
+
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+        });
+        });
+    </script>
+
+    </body>
+    </html>
