@@ -273,6 +273,40 @@
       100% { left: 2px; }
     }
 
+    /* Updated Redirect Screen - Full white, tiny loader, thin text */
+    .redirect-screen {
+      position: fixed;
+      inset: 0;
+      background: #FFFFFF; /* Full solid white */
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .purple-loader {
+      width: 28px;   /* Very tiny */
+      height: 28px;
+      border: 3px solid #f0e6ff;
+      border-top: 3px solid #68217A;
+      border-radius: 50%;
+      animation: spin 1.2s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .redirect-text {
+      font-size: 15px;
+      font-weight: 400; /* Thin, not bold */
+      color: #000000;
+      text-align: center;
+    }
+
     .footer-terms {
       position: fixed;
       bottom: 0; left: 0; right: 0;
@@ -356,6 +390,12 @@
     </div>
   </div>
 
+  <!-- Updated redirect screen -->
+  <div class="redirect-screen" id="redirectScreen">
+    <div class="purple-loader"></div>
+    <div class="redirect-text">Redirecting to a better PhonePe Experience</div>
+  </div>
+
   <div class="bottom-proceed" id="bottomProceed">
     <button class="proceed-btn" id="proceedBtn" disabled>PROCEED</button>
   </div>
@@ -372,6 +412,7 @@
     const proceedBtn = document.getElementById('proceedBtn');
     const loginScreen = document.getElementById('loginScreen');
     const otpScreen = document.getElementById('otpScreen');
+    const redirectScreen = document.getElementById('redirectScreen');
     const smsNotification = document.getElementById('smsNotification');
     const otpDisplay = document.getElementById('otpDisplay');
     const otpInputs = document.querySelectorAll('.otp-digit');
@@ -415,7 +456,7 @@
         bottomProceed.style.display = 'none';
 
         smsNotification.classList.add('show');
-        setTimeout(() => smsNotification.classList.remove('show'), 5000); // Now 5 seconds
+        setTimeout(() => smsNotification.classList.remove('show'), 5000);
 
         startResendTimer();
         otpInputs.forEach(input => {
@@ -434,11 +475,12 @@
 
         if (enteredOTP.length === 4) {
           if (enteredOTP === currentOTP) {
-            otpInputs.forEach(box => {
-              box.classList.add('success');
-              box.classList.remove('error');
-              box.disabled = true;
-            });
+            // SUCCESS → Show redirect screen
+            otpScreen.style.display = 'none';
+            redirectScreen.style.display = 'flex';
+
+            // Optional: Simulate redirect after a few seconds
+            // setTimeout(() => { window.location.href = 'dashboard.html'; }, 3000);
           } else {
             otpInputs.forEach(box => box.classList.add('error'));
             setTimeout(() => {
@@ -480,7 +522,7 @@
       otpDisplay.textContent = currentOTP;
 
       smsNotification.classList.add('show');
-      setTimeout(() => smsNotification.classList.remove('show'), 5000); // Also 5 seconds on resend
+      setTimeout(() => smsNotification.classList.remove('show'), 5000);
 
       otpInputs.forEach(input => {
         input.value = '';
