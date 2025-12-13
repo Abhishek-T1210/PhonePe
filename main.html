@@ -69,7 +69,7 @@
     .help-icon {
       width: 36px;
       height: 36px;
-      background: rgba(255,255,255,0.2);
+      background: rgba(24, 23, 23, 0.2);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -118,10 +118,10 @@
     /* Sections */
     .section {
       padding: 20px 16px;
-      background: #F5F3F7;
+      background: #ffffff;
     }
     .section-title {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
       margin-bottom: 20px;
       color: #1A1A1A;
@@ -138,50 +138,64 @@
       text-align: center;
     }
     .grid-icon {
-      width: 64px;
-      height: 64px;
+      width: 54px;
+      height: 54px;
       background: white;
-      border-radius: 16px;
+      border-radius: 50px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       overflow: hidden;
     }
     .grid-icon img {
       width: 40px;
-      height: 40px;
+      height: 35px;
       object-fit: contain;
     }
     .grid-label {
       font-size: 13px;
-      color: #333;
+      font-weight: 500;
+      color: #000000;
       line-height: 1.3;
     }
 
     /* Offer Banner */
     .offer-banner {
-      background: #E8F5E9;
+      background: #e8f7e8;
       border-radius: 16px;
-      padding: 16px;
+      border: 1px solid #d1dfd1;
+      padding: 8px;
       display: flex;
+      justify-content: center;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 24px;
     }
+
     .offer-text {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
       color: #1A1A1A;
+    }
+
+    .offer-text img {
+        height: 30px;
     }
     .offer-icon {
       font-size: 24px;
     }
 
+    .offer-icon img{
+        height: 16px;
+    }
     /* Recharge & Bills */
     .recharge-grid {
-      background: white;
+      background: #f6f7f6;
       border-radius: 16px;
       padding: 20px;
       margin-bottom: 24px;
@@ -279,7 +293,7 @@
     }
 
     .center-icon {
-      background: #68217A;
+      background: #680dc5;
       width: 56px;
       height: 56px;
       border-radius: 50%;
@@ -292,6 +306,7 @@
     .center-icon img {
       width: 32px;
       height: 32px;
+      filter: invert(1);
     }
 
     .alert-badge {
@@ -327,7 +342,7 @@
   <section class="banner">
     <div class="banner-header">
       <div class="user-avatar">
-        <img src="https://via.placeholder.com/40" alt="User">
+        <img src="profile.png" alt="User">
       </div>
       <div class="help-icon">?</div>
     </div>
@@ -344,34 +359,34 @@
     <h2 class="section-title">Money Transfers</h2>
     <div class="grid-4">
       <div class="grid-item">
-        <div class="grid-icon">
-          <img src="to_mobile.png" alt="To Mobile Number">
+        <div style="background-color: #680dc5;" class="grid-icon">
+          <img src="to phone.png" alt="To Mobile Number">
         </div>
         <div class="grid-label">To Mobile<br>Number</div>
       </div>
       <div class="grid-item">
-        <div class="grid-icon">
-          <img src="to_bank.png" alt="To Bank & Self A/c">
+        <div style="background-color: #680dc5;" class="grid-icon">
+          <img src="to bank.png" alt="To Bank & Self A/c">
         </div>
         <div class="grid-label">To Bank &<br>Self A/c</div>
       </div>
       <div class="grid-item">
-        <div class="grid-icon">
-          <img src="refer.png" alt="Refer & Get ₹100">
+        <div style="background-color: #680dc5;" class="grid-icon">
+          <img src="speaker.png" alt="Refer & Get ₹100">
         </div>
         <div class="grid-label">Refer & Get<br>₹100</div>
       </div>
       <div class="grid-item">
-        <div class="grid-icon">
-          <img src="check_balance.png" alt="Check Balance">
+        <div style="background-color: #680dc5;" class="grid-icon">
+          <img src="rupee.png" alt="Check Balance">
         </div>
         <div class="grid-label">Check<br>Balance</div>
       </div>
     </div>
 
     <div class="offer-banner">
-      <div class="offer-text">20% Off* on Health Insurance</div>
-      <div class="offer-icon">→</div>
+      <div class="offer-text"><img src="offer.png" alt="">20% Off* on Health Insurance</div>
+      <div class="offer-icon"><img src="arrow.png" alt=""></div>
     </div>
 
     <div class="recharge-grid">
