@@ -91,7 +91,7 @@
       position: relative;
     }
 
-    /* Thin Static Purple Rounded Corner Brackets */
+    /* Thin Static Purple Rounded Corner Brackets ONLY */
     .corner-bracket {
       position: absolute;
       width: 40px;
@@ -127,7 +127,7 @@
       border-bottom-right-radius: 20px;
     }
 
-    /* Upload QR & Torch Buttons - Directly Below Scanner */
+    /* Buttons Directly Below Scanner */
     .bottom-controls {
       margin-top: 28px;
       display: flex;
@@ -161,7 +161,7 @@
       filter: brightness(0) invert(1);
     }
 
-    /* BHIM | UPI Logo */
+    /* Logo */
     .logo {
       position: fixed;
       bottom: 12px;
@@ -170,7 +170,6 @@
       font-size: 12px;
       color: rgba(255,255,255,0.6);
       z-index: 10;
-      letter-spacing: 0.5px;
     }
   </style>
 </head>
@@ -189,7 +188,7 @@
   <!-- Dark Overlay -->
   <div class="scan-overlay"></div>
 
-  <!-- Scanner Box + Buttons Below -->
+  <!-- Your Custom Scanner + Buttons -->
   <div class="scan-container">
     <div class="scan-area">
       <div class="corner-bracket top-left"></div>
@@ -201,13 +200,13 @@
     <div class="bottom-controls">
       <div class="control-btn" id="upload-btn">
         <div class="control-icon">
-          <img src="https://img.icons8.com/ios/50/FFFFFF/picture.png" alt="Upload">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/image.png" alt="Upload">
         </div>
         Upload QR
       </div>
       <div class="control-btn" id="torch-btn">
         <div class="control-icon">
-          <img src="https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/64/FFFFFF/external-torch-interface-kiranshastry-lineal-kiranshastry.png" alt="Torch">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/flashlight.png" alt="Torch">
         </div>
         Torch
       </div>
@@ -223,9 +222,9 @@
   <script>
     const html5QrCode = new Html5Qrcode("reader");
 
+    // REMOVED qrbox from config → no more default white/gray scan box
     const config = {
       fps: 10,
-      qrbox: { width: 280, height: 280 },
       aspectRatio: 1,
       facingMode: "environment" // Back camera
     };
@@ -237,11 +236,9 @@
         alert("QR Scanned Successfully:\n" + decodedText);
         html5QrCode.stop();
       },
-      () => {
-        // Silent scan errors
-      }
+      () => {}
     ).catch((err) => {
-      alert("Unable to access camera: " + err);
+      alert("Camera access denied: " + err);
     });
 
     // Torch Toggle
@@ -250,12 +247,10 @@
       torchOn = !torchOn;
       html5QrCode.applyVideoConstraints({
         advanced: [{ torch: torchOn }]
-      }).catch(() => {
-        // Torch not supported
-      });
+      }).catch(() => {});
     });
 
-    // Upload QR from Gallery
+    // Upload QR
     document.getElementById("upload-btn").addEventListener("click", () => {
       const fileInput = document.createElement("input");
       fileInput.type = "file";
@@ -264,12 +259,8 @@
         const file = e.target.files[0];
         if (file) {
           html5QrCode.scanFileV2(file, true)
-            .then((result) => {
-              alert("QR from image:\n" + result.text);
-            })
-            .catch(() => {
-              alert("No QR code found in the image.");
-            });
+            .then((result) => alert("QR from image:\n" + result.text))
+            .catch(() => alert("No QR code found."));
         }
       };
       fileInput.click();
@@ -277,4 +268,4 @@
   </script>
 
 </body>
-</html>     
+</html>
