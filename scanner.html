@@ -30,8 +30,9 @@
       z-index: 10;
     }
     .close-btn {
-      font-size: 24px;
+      font-size: 28px;
       cursor: pointer;
+      font-weight: 300;
     }
     .title {
       font-size: 18px;
@@ -59,60 +60,81 @@
       object-fit: cover;
     }
 
-    /* Scan Frame Overlay */
-    .scan-frame {
+    /* Dark Overlay Outside Scan Area */
+    .scan-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.55);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Centered Scanner Container */
+    .scan-container {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 260px;
-      height: 260px;
-      border: 3px solid #68217A;
-      border-radius: 20px;
-      pointer-events: none;
-      box-shadow: 0 0 30px rgba(104, 33, 122, 0.6);
+      width: 280px;
+      text-align: center;
+      z-index: 6;
     }
-    .scan-frame::before, .scan-frame::after,
-    .scan-frame > div::before, .scan-frame > div::after {
-      content: '';
+
+    .scan-area {
+      width: 280px;
+      height: 280px;
+      background: transparent;
+      border-radius: 24px;
+      position: relative;
+    }
+
+    /* Thin Static Purple Rounded Corner Brackets */
+    .corner-bracket {
       position: absolute;
       width: 40px;
       height: 40px;
-      border-color: #68217A;
     }
-    .scan-frame::before {
-      top: -3px; left: -3px;
-      border-top: 6px solid;
-      border-left: 6px solid;
-    }
-    .scan-frame::after {
-      top: -3px; right: -3px;
-      border-top: 6px solid;
-      border-right: 6px solid;
-    }
-    .scan-frame > div::before {
-      bottom: -3px; left: -3px;
-      border-bottom: 6px solid;
-      border-left: 6px solid;
-    }
-    .scan-frame > div::after {
-      bottom: -3px; right: -3px;
-      border-bottom: 6px solid;
-      border-right: 6px solid;
-    }
-    .scan-frame > div { position: absolute; bottom: 0; width: 100%; height: 40px; }
 
-    /* Bottom Controls */
-    .bottom-controls {
-      position: fixed;
-      bottom: 40px;
+    .top-left {
+      top: 0;
       left: 0;
+      border-top: 5px solid #68217A;
+      border-left: 5px solid #68217A;
+      border-top-left-radius: 20px;
+    }
+    .top-right {
+      top: 0;
       right: 0;
+      border-top: 5px solid #68217A;
+      border-right: 5px solid #68217A;
+      border-top-right-radius: 20px;
+    }
+    .bottom-left {
+      bottom: 0;
+      left: 0;
+      border-bottom: 5px solid #68217A;
+      border-left: 5px solid #68217A;
+      border-bottom-left-radius: 20px;
+    }
+    .bottom-right {
+      bottom: 0;
+      right: 0;
+      border-bottom: 5px solid #68217A;
+      border-right: 5px solid #68217A;
+      border-bottom-right-radius: 20px;
+    }
+
+    /* Upload QR & Torch Buttons - Directly Below Scanner */
+    .bottom-controls {
+      margin-top: 28px;
       display: flex;
       justify-content: center;
       gap: 60px;
-      z-index: 10;
     }
+
     .control-btn {
       display: flex;
       flex-direction: column;
@@ -120,7 +142,9 @@
       color: white;
       font-size: 14px;
       gap: 8px;
+      cursor: pointer;
     }
+
     .control-icon {
       width: 56px;
       height: 56px;
@@ -130,21 +154,23 @@
       align-items: center;
       justify-content: center;
     }
+
     .control-icon img {
       width: 28px;
       height: 28px;
       filter: brightness(0) invert(1);
     }
 
-    /* Logo */
+    /* BHIM | UPI Logo */
     .logo {
       position: fixed;
-      bottom: 10px;
+      bottom: 12px;
       left: 50%;
       transform: translateX(-50%);
       font-size: 12px;
       color: rgba(255,255,255,0.6);
       z-index: 10;
+      letter-spacing: 0.5px;
     }
   </style>
 </head>
@@ -157,25 +183,34 @@
     <div class="help-icon">?</div>
   </div>
 
-  <!-- QR Scanner -->
+  <!-- QR Scanner Video -->
   <div id="reader"></div>
 
-  <!-- Scan Frame Overlay -->
-  <div class="scan-frame"><div></div></div>
+  <!-- Dark Overlay -->
+  <div class="scan-overlay"></div>
 
-  <!-- Bottom Controls -->
-  <div class="bottom-controls">
-    <div class="control-btn" id="upload-btn">
-      <div class="control-icon">
-        <img src="https://img.icons8.com/ios-filled/50/ffffff/image.png" alt="Upload">
-      </div>
-      Upload QR
+  <!-- Scanner Box + Buttons Below -->
+  <div class="scan-container">
+    <div class="scan-area">
+      <div class="corner-bracket top-left"></div>
+      <div class="corner-bracket top-right"></div>
+      <div class="corner-bracket bottom-left"></div>
+      <div class="corner-bracket bottom-right"></div>
     </div>
-    <div class="control-btn" id="torch-btn">
-      <div class="control-icon">
-        <img src="https://img.icons8.com/ios-filled/50/ffffff/flashlight.png" alt="Torch">
+
+    <div class="bottom-controls">
+      <div class="control-btn" id="upload-btn">
+        <div class="control-icon">
+          <img src="https://img.icons8.com/ios/50/FFFFFF/picture.png" alt="Upload">
+        </div>
+        Upload QR
       </div>
-      Torch
+      <div class="control-btn" id="torch-btn">
+        <div class="control-icon">
+          <img src="https://img.icons8.com/external-kiranshastry-lineal-kiranshastry/64/FFFFFF/external-torch-interface-kiranshastry-lineal-kiranshastry.png" alt="Torch">
+        </div>
+        Torch
+      </div>
     </div>
   </div>
 
@@ -190,25 +225,20 @@
 
     const config = {
       fps: 10,
-      qrbox: { width: 260, height: 260 },
+      qrbox: { width: 280, height: 280 },
       aspectRatio: 1,
-      facingMode: "environment" // Uses back camera by default
+      facingMode: "environment" // Back camera
     };
 
-    // Start scanning with back camera
     html5QrCode.start(
       { facingMode: "environment" },
       config,
-      (decodedText, decodedResult) => {
-        // On successful scan
-        alert("QR Scanned: " + decodedText);
-        // You can redirect or process the result here
-        // window.location.href = "payment.html?upi=" + decodedText;
+      (decodedText) => {
+        alert("QR Scanned Successfully:\n" + decodedText);
         html5QrCode.stop();
       },
-      (errorMessage) => {
-        // Scan error (optional logging)
-        // console.warn(errorMessage);
+      () => {
+        // Silent scan errors
       }
     ).catch((err) => {
       alert("Unable to access camera: " + err);
@@ -220,10 +250,12 @@
       torchOn = !torchOn;
       html5QrCode.applyVideoConstraints({
         advanced: [{ torch: torchOn }]
+      }).catch(() => {
+        // Torch not supported
       });
     });
 
-    // Upload QR from gallery (file-based scanning)
+    // Upload QR from Gallery
     document.getElementById("upload-btn").addEventListener("click", () => {
       const fileInput = document.createElement("input");
       fileInput.type = "file";
@@ -233,10 +265,10 @@
         if (file) {
           html5QrCode.scanFileV2(file, true)
             .then((result) => {
-              alert("QR from image: " + result.text);
+              alert("QR from image:\n" + result.text);
             })
-            .catch((err) => {
-              alert("No QR found in image");
+            .catch(() => {
+              alert("No QR code found in the image.");
             });
         }
       };
@@ -245,4 +277,4 @@
   </script>
 
 </body>
-</html>
+</html>     
