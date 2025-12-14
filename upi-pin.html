@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Enter UPI PIN - PhonePe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f7;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: white;
+      padding: 22px;
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      border-bottom: 1px solid #eee;
+      position: relative;
+    }
+    .cancel-btn {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      font-size: 16px;
+      color: #000000;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .bank-info {
+      background: white;
+      padding: 16px 20px;
+      padding-bottom: 2px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+    }
+    .bank-details {
+      display: flex;
+      flex-direction: column;
+    }
+    .bank-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+    }
+    .account-number {
+      font-size: 15px;
+      color: #666;
+    }
+    .upi-logo {
+      width: 78px;
+      height: auto;
+    }
+
+    .details-strip {
+      background: #c7c7c7;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 3px;
+      font-size: 15px;
+      color: #666;
+    }
+    .details-label {
+      color: #000000;
+    }
+    .details-value {
+      color: #333333;
+      font-weight: 500;
+      max-width: 65%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      text-align: right;
+    }
+    .dropdown-arrow {
+      margin-left: 8px;
+      color: #999;
+    }
+
+    .pin-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      background: white;
+    }
+    .pin-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 40px;
+    }
+    .pin-dots-container {
+      margin-bottom: 60px;
+      cursor: pointer;
+    }
+    .pin-dots {
+      display: flex;
+      gap: 20px;
+    }
+    .dot {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #535353;
+      border-radius: 50%;
+      background: white;
+    }
+    .dot.filled {
+      background: #535353;
+      border-color: #535353;
+    }
+
+    .warning-box {
+      background: #fff9e6;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin: 0 auto 40px;
+      text-align: center;
+      max-width: 90%;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .warning-icon {
+      font-size: 28px;
+      color: #ff9800;
+      flex-shrink: 0;
+    }
+    .warning-text {
+      font-size: 10px;
+      color: #333;
+      line-height: 1.5;
+      text-align: left;
+    }
+    .highlight {
+      font-weight: 600;
+      background: #fff3c4;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* Hidden input to trigger native numeric keypad */
+    #pin-input {
+      position: absolute;
+      left: -9999px;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <span class="cancel-btn" onclick="window.location.href='scanner.html'">CANCEL</span>
+  </div>
+
+  <div class="bank-info">
+    <div class="bank-details">
+      <div class="bank-name" id="bank-name">Loading...</div>
+      <div class="account-number" id="account-number">XXXX0000</div>
+    </div>
+    <img src="upi.svg" alt="UPI Logo" class="upi-logo">
+  </div>
+
+  <div class="details-strip">
+    <span class="details-label">To:</span>
+    <span class="details-value" id="payee-name">Loading...<span class="dropdown-arrow">▼</span></span>
+  </div>
+
+  <div class="details-strip">
+    <span class="details-label">Sending:</span>
+    <span class="details-value" id="amount">₹0.00<span class="dropdown-arrow">▼</span></span>
+  </div>
+
+  <div class="pin-section">
+    <div class="pin-title">ENTER 4-DIGIT UPI PIN</div>
+
+    <div class="pin-dots-container" id="pin-dots-container">
+      <div class="pin-dots">
+        <div class="dot" id="dot1"></div>
+        <div class="dot" id="dot2"></div>
+        <div class="dot" id="dot3"></div>
+        <div class="dot" id="dot4"></div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <div class="warning-icon">!</div>
+      <div class="warning-text">
+        You are SENDING <span class="highlight" id="warning-amount">₹0</span> from your account to<br>
+        <span class="highlight" id="warning-payee">Payee</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden input triggers native numeric keypad -->
+  <input
+    type="text"
+    inputmode="numeric"
+    pattern="[0-9]*"
+    maxlength="4"
+    id="pin-input"
+    autocomplete="off"
+  />
+
+  <script>
+    // Load payment data
+    const data = JSON.parse(localStorage.getItem('upiPaymentData'));
+    if (!data) {
+      alert("No payment data found. Redirecting...");
+      window.location.href = 'scanner.html';
+    }
+
+    document.getElementById('bank-name').textContent = data.bankName;
+    document.getElementById('account-number').textContent = data.accountMask;
+    document.getElementById('payee-name').textContent = data.payeeName.toUpperCase().substring(0, 25);
+    document.getElementById('amount').textContent = '₹' + parseFloat(data.amount).toFixed(2);
+    document.getElementById('warning-amount').textContent = '₹' + parseFloat(data.amount).toFixed(2);
+    document.getElementById('warning-payee').textContent = data.payeeName.toUpperCase();
+
+    // PIN logic with native keypad
+    let pin = '';
+    const dots = [
+      document.getElementById('dot1'),
+      document.getElementById('dot2'),
+      document.getElementById('dot3'),
+      document.getElementById('dot4')
+    ];
+    const pinInput = document.getElementById('pin-input');
+    const dotsContainer = document.getElementById('pin-dots-container');
+
+    function updateDots() {
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('filled', i < pin.length);
+      });
+    }
+
+    // Tap dots → opens native numeric keypad
+    dotsContainer.onclick = () => {
+      pinInput.focus();
+    };
+
+    pinInput.addEventListener('input', (e) => {
+      pin = e.target.value.replace(/\D/g, '').slice(0, 4);
+      e.target.value = pin;
+      updateDots();
+
+      if (pin.length === 4) {
+        setTimeout(() => {
+          localStorage.removeItem('upiPaymentData');
+          alert(`Payment Successful!\n₹${data.amount} sent to ${data.payeeName}`);
+          window.location.href = 'scanner.html';
+        }, 400);
+      }
+    });
+
+    updateDots();
+  </script>
+</body>
+</html>
