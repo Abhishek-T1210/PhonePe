@@ -146,7 +146,7 @@
       background: white;
       border-radius: 16px;
       padding: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);   
     }
 
     .payee-header {
@@ -174,7 +174,6 @@
     }
     .bank-label { color: #666; }
     .bank-name-group { display: flex; align-items: center; gap: 8px; color: #333; }
-    .bank-name-group .colon { margin-right: 4px; }
     .bank-name-group svg { width: 19px; height: 19px; fill: #4caf50; }
 
     .amount-wrapper {
@@ -226,6 +225,181 @@
       color: #FFFFFF;
       cursor: pointer;
     }
+
+    /* Translucent overlay when drawer is open */
+    .payment-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 199;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .payment-overlay.active {
+      opacity: 1;
+    }
+
+    /* Bank Drawer Styles */
+    .bank-drawer {
+      position: fixed;
+      bottom: -100%;
+      left: 0;
+      right: 0;
+      background: #f9f9f9;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+      transition: bottom 0.3s ease-in-out;
+      z-index: 200;
+      overflow-y: auto;
+      max-height: 80vh;
+    }
+    .bank-drawer.active {
+      bottom: 0;
+    }
+
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 16px;
+     background: #f9f9f9;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+    }
+    .total-payable {
+      font-size: 14px;
+      color: #000000;
+      font-weight: 700;
+    }
+    .total-amount {
+      font-size: 16px;
+      font-weight: 700;
+      color: #000000;
+    }
+
+    .section-title {
+    font-size: 13px;
+    color: #666;
+    padding: 12px 16px;
+    font-weight: 500;
+    background: white;
+    border-top: 7px solid #f0f0f0;
+    }
+
+    .bank-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      cursor: pointer;
+      background: white;
+    }
+    .bank-option:last-of-type { border-bottom: none; }
+
+    .bank-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+    .bank-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+    .bank-details {
+      display: flex;
+      flex-direction: column;
+    }
+    .bank-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+    }
+    .bank-account-line {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      color: #666;
+    }
+    .upi-logo {
+      width: 38px;
+      height: 16px;
+      object-fit: contain;
+    }
+    .bank-amount {
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+      margin-right: 8px;
+    }
+    .select-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+    }
+    .select-circle.selected {
+      border: 1px solid #4caf50;
+      background: #4caf50;
+    }
+    .select-circle.selected::after {
+      content: '✓';
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .set-upi-pin {
+      font-size: 13px;
+      color: #68217A;
+      font-weight: 600;
+    }
+
+    .add-payment-methods {
+      font-size: 13px;
+      color: #666;
+      padding: 12px 16px;
+      font-weight: 500;
+      background: #f9f9f9;
+    }
+
+    .add-bank-accounts {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      font-size: 15px;
+      color: #333;
+      cursor: pointer;
+      background: white;
+    }
+    .add-bank-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 12px;
+    }
+
+    .final-pay-btn {
+      background: #68217A;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 16px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    width: 92%;
+    border-radius: 10px;
+    margin: 16px;
+    }
   </style>
 </head>
 <body>
@@ -271,14 +445,12 @@
   <!-- Payment Interface -->
   <div class="payment-interface" id="payment-view">
     <div class="payment-header">
-      <!-- Fixed: Back button now properly goes back to scanner -->
       <div class="payment-back-btn" onclick="backToScanner()">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
       </div>
       <div class="payment-title">Pay</div>
-      <!-- Fixed: Question icon size -->
       <div class="payment-help">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
@@ -319,6 +491,72 @@
     </div>
 
     <button class="pay-button" id="pay-btn" disabled>PROCEED TO PAY</button>
+
+    <!-- Translucent overlay when drawer is open -->
+    <div class="payment-overlay" id="payment-overlay"></div>
+  </div>
+
+  <!-- Bank Drawer -->
+  <div class="bank-drawer" id="bank-drawer">
+    <div class="drawer-header">
+      <span class="total-payable">Total payable</span>
+      <span class="total-amount" id="drawer-amount">₹0</span>
+    </div>
+
+    <div class="section-title">Recommended</div>
+    <div class="bank-option" data-bank="hdfc" onclick="selectBank(this)">
+      <div class="bank-info">
+        <img src="hdfc icon.webp" alt="HDFC Bank" class="bank-logo">
+        <div class="bank-details">
+          <div class="bank-name">HDFC Bank</div>
+          <div class="bank-account-line">
+            ••9577
+            <img src="upi.svg" alt="UPI" class="upi-logo">
+          </div>
+        </div>
+      </div>
+      <div class="bank-amount" id="drawer-amount-rec">₹0</div>
+      <div class="select-circle selected"></div>
+    </div>
+
+    <div class="section-title">Bank accounts</div>
+    <div class="bank-option" data-bank="axis" onclick="selectBank(this)">
+      <div class="bank-info">
+        <img src="axis.png" alt="Axis Bank" class="bank-logo">
+        <div class="bank-details">
+          <div class="bank-name">Axis Bank</div>
+          <div class="bank-account-line">
+            ••2696
+            <img src="upi.svg" alt="UPI" class="upi-logo">
+          </div>
+        </div>
+      </div>
+      <div class="bank-amount">₹0</div>
+      <div class="select-circle"></div>
+    </div>
+    <div class="bank-option" data-bank="saraswat" onclick="selectBank(this)">
+      <div class="bank-info">
+        <img src="saraswat.png" alt="Saraswat Bank" class="bank-logo">
+        <div class="bank-details">
+          <div class="bank-name">Saraswat Bank</div>
+          <div class="bank-account-line">
+            ••3493
+            <img src="upi.svg" alt="UPI" class="upi-logo">
+          </div>
+        </div>
+      </div>
+      <span class="set-upi-pin">Set UPI PIN</span>
+    </div>
+
+    <div class="add-payment-methods">Add payment methods</div>
+
+    <div class="add-bank-accounts">
+      <img src="https://img.icons8.com/external-xnimrodx-lineal-xnimrodx/64/1A1A1A/external-bank-banking-and-financial-xnimrodx-lineal-xnimrodx.png" alt="Bank" class="add-bank-icon">
+      Add bank accounts
+      <svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" width="20" height="20"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+
+    <div class="final-pay-btn" id="final-pay-btn">PAY ₹0</div>
   </div>
 
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -326,6 +564,7 @@
     let html5QrCode = null;
     let currentUpiData = null;
     let torchOn = false;
+    let currentAmount = 0;
 
     function parseUpiQr(qrString) {
       if (!qrString.toLowerCase().startsWith('upi://pay')) throw new Error('Not a valid UPI QR code');
@@ -372,40 +611,64 @@
       document.getElementById('payment-view').classList.add('active');
     }
 
-    // Fixed: Back button now correctly returns to scanner and restarts camera
     function backToScanner() {
       document.getElementById('payment-view').classList.remove('active');
       document.getElementById('scanner-view').style.display = 'block';
-      currentUpiData = null;
-      startScanner(); // <-- This restarts the camera properly
+      closeBankDrawer();
+      startScanner();
     }
 
-    function processPay() {
-      const amount = document.getElementById('amount-input').value;
-      if (!amount || parseFloat(amount) < 1) {
+    function closeBankDrawer() {
+      document.getElementById('bank-drawer').classList.remove('active');
+      document.getElementById('payment-overlay').classList.remove('active');
+    }
+
+    function openBankDrawer() {
+      currentAmount = parseFloat(document.getElementById('amount-input').value) || 0;
+      if (currentAmount < 1) {
         document.getElementById('amount-error').style.display = 'block';
         return;
       }
       document.getElementById('amount-error').style.display = 'none';
-      alert(`Demo: Paying ₹${amount} to ${currentUpiData.pn}`);
-      backToScanner();
+
+      const formatted = '₹' + currentAmount.toFixed(0);
+      document.getElementById('drawer-amount').textContent = formatted;
+      document.querySelectorAll('.bank-amount').forEach(el => el.textContent = '');
+      document.getElementById('drawer-amount-rec').textContent = formatted;
+      document.getElementById('final-pay-btn').textContent = 'PAY ' + formatted;
+
+      document.getElementById('bank-drawer').classList.add('active');
+      document.getElementById('payment-overlay').classList.add('active');
     }
 
+    function selectBank(element) {
+      document.querySelectorAll('.select-circle').forEach(c => c.classList.remove('selected'));
+      element.querySelector('.select-circle').classList.add('selected');
+
+      const formatted = '₹' + currentAmount.toFixed(0);
+      document.querySelectorAll('.bank-amount').forEach(el => el.textContent = '');
+      element.querySelector('.bank-amount').textContent = formatted;
+    }
+
+    document.getElementById('pay-btn').onclick = function () {
+      openBankDrawer();
+    };
+
+    document.getElementById('final-pay-btn').onclick = function () {
+      alert(`Demo: Paying ₹${currentAmount} to ${currentUpiData.pn}`);
+      backToScanner();
+    };
+
     document.getElementById('amount-input').addEventListener('input', function () {
-      const value = parseFloat(this.value);
+      const value = parseFloat(this.value) || 0;
       const payBtn = document.getElementById('pay-btn');
-      const errorEl = document.getElementById('amount-error');
 
-      if (this.disabled) return;
-
-      if (this.value === '' || (value >= 1)) {
+      if (this.disabled || value >= 1) {
         payBtn.classList.add('enabled');
         payBtn.disabled = false;
-        errorEl.style.display = 'none';
       } else {
         payBtn.classList.remove('enabled');
         payBtn.disabled = true;
-        errorEl.style.display = 'block';
       }
     });
 
