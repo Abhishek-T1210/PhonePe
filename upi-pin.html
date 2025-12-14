@@ -10,13 +10,379 @@
     html, body {
       height: 100%;
       overflow: hidden;
-      background: #f5f5f7; /* Prevent any white flash */
+      background: #f5f5f7;
     }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      position: relative;
     }
 
-    /* Start visible but at bottom, then slide up */
+    /* Full-screen processing overlay - Connecting Securely */
+    #processing-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease;
+    }
+    #processing-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .loader {
+      width: 120px;
+      height: 40px;
+      background: #f0f0f0;
+      border-radius: 30px;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Three overlapping color layers */
+    .color-layer {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      border-radius: 30px;
+      width: 40%;
+      animation: flowLeftToRight 2s infinite ease-in-out;
+    }
+
+    .color-layer:nth-child(1) {
+      background: #a855f7; /* Light Purple */
+      left: 0;
+      animation-delay: 0s;
+    }
+
+    .color-layer:nth-child(2) {
+      background: #7c3aed; /* Medium Purple */
+      left: 30%;
+      animation-delay: 0.3s;
+    }
+
+    .color-layer:nth-child(3) {
+      background: #4c1d95; /* Dark Purple */
+      left: 60%;
+      animation-delay: 0.6s;
+    }
+
+    @keyframes flowLeftToRight {
+      0% {
+        transform: translateX(-60%);
+        opacity: 0.8;
+      }
+      50% {
+        transform: translateX(100%);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+
+    /* Fallback shine effect for better visual */
+    .loader::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shine 1.8s infinite;
+      z-index: 1;
+    }
+
+    @keyframes shine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .connecting-text {
+      font-size: 20px;
+      font-weight: 700;
+      color: #333;
+    }
+    .note-text {
+      font-size: 16px;
+      color: #666;
+      margin-top: 80px;
+      text-align: center;
+      padding: 0 40px;
+    }
+
+    /* Success Overlay - Now using #2a712d throughout */
+    #success-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #2a712d;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+      color: white;
+    }
+
+    .success-icon-big {
+      width: 80px;
+      height: 80px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .checkmark-svg-big {
+      width: 50px;
+      height: 50px;
+    }
+
+    .checkmark-path-big {
+      stroke: #2a712d;
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      animation: drawCheck 0.8s ease-out 0.3s forwards;
+    }
+
+    @keyframes drawCheck {
+      to { stroke-dashoffset: 0; }
+    }
+
+    .success-text-big {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .success-time {
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    /* Detailed Receipt Page */
+    #receipt-page {
+      position: fixed;
+      top: 100%;
+      left: 0;
+      right: 0;
+      height: 100%;
+      background: white;
+      transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex;
+      flex-direction: column;
+      z-index: 1002;
+      overflow-y: auto;
+    }
+    #receipt-page.active {
+      transform: translateY(-100%);
+    }
+
+    .receipt-header {
+      background: #2a712d;
+      color: white;
+      text-align: center;
+      padding: 80px 20px 30px;
+    }
+
+    .receipt-check {
+      width: 60px;
+      height: 60px;
+      background: white;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .receipt-title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .receipt-time {
+      font-size: 16px;
+      margin-top: 8px;
+      opacity: 0.9;
+    }
+
+    .receipt-card {
+      background: white;
+      margin: 20px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .payee-section {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      padding-bottom: 0px;
+    }
+
+    .payee-logo {
+      width: 60px;
+      height: 60px;
+      background: #2a712d; /* Matching success green */
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      font-weight: 700;
+      margin-right: 16px;
+    }
+
+    .payee-details {
+      flex: 1;
+    }
+
+    .payee-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .payee-vpa {
+      font-size: 14px;
+      color: #666;
+      margin-top: 4px;
+      display: none
+
+    }
+
+    .amount-big {
+    font-size: 32px;
+    font-weight: 700;
+    width: 69%;
+    color: #333;
+    text-align: center;
+    padding: 16px 0;
+    padding-top: 0%;
+    padding-bottom: 0%;
+    }
+
+    .split-expense {
+      text-align: right;
+      padding: 0 20px 20px;
+      color: #8142d4;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .action-buttons {
+      display: flex;
+      border-top: 1px solid #eee;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 16px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+      color: #8142d4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .action-btn-icon {
+      width: 40px;
+      height: 40px;
+      background: #e6d4f8;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8142d4;
+      font-size: 14px;
+    }
+
+    /* Ad Banner */
+    .ad-banner {
+      margin: 20px;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .ad-gradient {
+      background: linear-gradient(135deg, #ff6b6b, #9c27b0);
+      padding: 24px;
+      color: white;
+      text-align: center;
+    }
+
+    .ad-images {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .ad-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      background: #ccc;
+    }
+
+    .icloud-logo {
+      width: 20px;
+      margin: 4px auto;
+      display: block;
+    }
+
+    .ad-title {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .ad-subtitle {
+      font-size: 14px;
+      margin: 12px 0;
+      opacity: 0.9;
+    }
+
+    .upgrade-btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .ad-note {
+      font-size: 10px;
+      opacity: 0.7;
+      margin-top: 12px;
+    }
+
+    /* Page slide-up container */
     .page-container {
       position: fixed;
       top: 100%;
@@ -27,13 +393,10 @@
       transition: transform 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
       display: flex;
       flex-direction: column;
-      /* Hardware acceleration fixes to prevent flash/flicker */
-      -webkit-transform: translateZ(0);
       transform: translateZ(0);
-      -webkit-backface-visibility: hidden;
+      -webkit-transform: translateZ(0);
       backface-visibility: hidden;
-      -webkit-perspective: 1000;
-      perspective: 1000;
+      -webkit-backface-visibility: hidden;
     }
     .page-container.active {
       transform: translateY(-100%);
@@ -123,7 +486,7 @@
       justify-content: flex-start;
       padding-top: 100px;
       background: white;
-      min-height: 0; /* Important for flex */
+      min-height: 0;
     }
     .pin-title {
       font-size: 18px;
@@ -180,16 +543,111 @@
       border-radius: 4px;
     }
 
-    /* Hidden input */
     #pin-input {
       position: absolute;
       left: -9999px;
       opacity: 0;
+      font-size: 16px;
+      padding: 10px;
+    }
+
+    /* Focus styles to ensure numpad appears */
+    #pin-input:focus {
+      outline: none;
+      border: 2px solid #a855f7;
+    }
+
+    /* Prevent zoom on iOS */
+    @media screen and (-webkit-min-device-pixel-ratio: 0) {
+      select:focus, input:focus, textarea:focus {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 <body>
 
+  <!-- Connecting Securely Overlay -->
+  <div id="processing-overlay">
+    <div class="loader">
+      <div class="color-layer"></div>
+      <div class="color-layer"></div>
+      <div class="color-layer"></div>
+    </div>
+    <div class="connecting-text">Connecting Securely</div>
+    <div class="note-text">Note: Do not press back or close the app</div>
+  </div>
+
+  <!-- Initial Success Screen -->
+  <div id="success-overlay">
+    <div class="success-icon-big">
+      <svg class="checkmark-svg-big" viewBox="0 0 100 100">
+        <polyline class="checkmark-path-big" points="20,50 45,75 80,30" />
+      </svg>
+    </div>
+    <div class="success-text-big">Payment Successful</div>
+    <div class="success-time" id="success-time-big"></div>
+  </div>
+
+  <!-- Detailed Receipt Page -->
+  <div id="receipt-page">
+    <div class="receipt-header">
+      <div class="receipt-check">
+          <svg width="40" height="40" viewBox="0 0 100 100">
+    <polyline
+      points="20,50 45,75 80,30"
+      fill="none"
+      stroke="#00c853"  
+      stroke-width="8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+      </div>
+      <div class="receipt-title">Payment Successful</div>
+      <div class="receipt-time" id="receipt-time"></div>
+    </div>
+
+    <div class="receipt-card">
+      <div class="payee-section">
+        <div class="payee-logo" id="payee-logo-initials"></div>
+        <div class="payee-details">
+          <div class="payee-name" id="receipt-payee-name"></div>
+          <div class="payee-vpa" id="receipt-payee-vpa"></div>
+        </div>
+      </div>
+      <div class="amount-big" id="receipt-amount"></div>
+      <div class="split-expense">Split Expense</div>
+
+      <div class="action-buttons">
+        <div class="action-btn">
+          <div class="action-btn-icon"><img  style="height: 26px; width: 26px;" src="https://img.icons8.com/external-bearicons-detailed-outline-bearicons/64/C850F2/external-notes-graphic-design-bearicons-detailed-outline-bearicons.png" alt=""></div>
+          View Details
+        </div>
+        <div class="action-btn">
+          <div class="action-btn-icon"><img src="https://img.icons8.com/material-outlined/24/C850F2/share.png" alt=""></div>
+          Share Receipt
+        </div>
+      </div>
+    </div>
+
+    <!-- iCloud+ Diwali Ad (kept as in screenshot style) -->
+    <div class="ad-banner">
+      <div class="ad-gradient">
+        <div class="ad-images">
+        </div>
+
+        <img src="https://img.icons8.com/material-sharp/24/FFFFFF/mac-os.png" alt="iCloud+" class="icloud-logo">
+
+        <div class="ad-title">All your Diwali memories.<br>Safe and secure.</div>
+        <div class="ad-subtitle">iCloud+ storage starting from ₹75/month</div>
+        <button class="upgrade-btn">Upgrade now</button>
+        <div class="ad-note">Subscription required. iCloud+ storage space varies by subscription plan. Some iCloud features are not available in all countries or regions.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main PIN Entry Page -->
   <div class="page-container" id="page-container">
     <div class="header">
       <span class="cancel-btn" onclick="window.location.href='scanner.html'">CANCEL</span>
@@ -235,14 +693,7 @@
     </div>
   </div>
 
-  <input
-    type="text"
-    inputmode="numeric"
-    pattern="[0-9]*"
-    maxlength="4"
-    id="pin-input"
-    autocomplete="off"
-  />
+  <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" id="pin-input" autocomplete="off">
 
   <script>
     const data = JSON.parse(localStorage.getItem('upiPaymentData'));
@@ -251,6 +702,7 @@
       window.location.href = 'scanner.html';
     }
 
+    // Populate PIN page (unchanged)
     document.getElementById('bank-name').textContent = data.bankName;
     document.getElementById('account-number').textContent = data.accountMask;
     document.getElementById('payee-name').textContent = data.payeeName.toUpperCase().substring(0, 25);
@@ -258,17 +710,50 @@
     document.getElementById('warning-amount').textContent = '₹' + parseFloat(data.amount).toFixed(2);
     document.getElementById('warning-payee').textContent = data.payeeName.toUpperCase();
 
-    let pin = '';
-    const dots = [document.getElementById('dot1'), document.getElementById('dot2'), document.getElementById('dot3'), document.getElementById('dot4')];
+    // Populate receipt page dynamically from the same data
+    document.getElementById('receipt-payee-name').textContent = data.payeeName.toUpperCase();
+
+    // Assuming data has payeeVpa (common in such flows), fallback to placeholder if not
+    const vpa = data.payeeVpa || 'example@upi'; 
+    document.getElementById('receipt-payee-vpa').textContent = vpa;
+
+    // Format amount with Indian comma style (e.g., ₹1,800)
+    const formattedAmount = '₹' + parseFloat(data.amount).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    document.getElementById('receipt-amount').textContent = formattedAmount;
+
+    // Generate initials for logo (first letters of words in payee name)
+    const initials = data.payeeName.split(' ').map(word => word[0].toUpperCase()).join('').substring(0, 2);
+    document.getElementById('payee-logo-initials').textContent = initials || '??';
+
+    // Elements
+    const processingOverlay = document.getElementById('processing-overlay');
+    const successOverlay = document.getElementById('success-overlay');
+    const receiptPage = document.getElementById('receipt-page');
+    const pageContainer = document.getElementById('page-container');
     const pinInput = document.getElementById('pin-input');
     const dotsContainer = document.getElementById('pin-dots-container');
-    const pageContainer = document.getElementById('page-container');
+    let pin = '';
+    const dots = [
+      document.getElementById('dot1'),
+      document.getElementById('dot2'),
+      document.getElementById('dot3'),
+      document.getElementById('dot4')
+    ];
 
     function updateDots() {
       dots.forEach((dot, i) => dot.classList.toggle('filled', i < pin.length));
     }
 
-    dotsContainer.onclick = () => pinInput.focus();
+    dotsContainer.onclick = () => {
+      pinInput.focus();
+      setTimeout(() => pinInput.click(), 50);
+    };
+
+    // Set current time
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' on ' + now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    document.getElementById('success-time-big').textContent = timeStr;
+    document.getElementById('receipt-time').textContent = timeStr;
 
     pinInput.addEventListener('input', (e) => {
       pin = e.target.value.replace(/\D/g, '').slice(0, 4);
@@ -276,31 +761,54 @@
       updateDots();
 
       if (pin.length === 4) {
+        pinInput.disabled = true;
+
+        processingOverlay.classList.add('active');
+
         setTimeout(() => {
-          localStorage.removeItem('upiPaymentData');
-          alert(`Payment Successful!\n₹${data.amount} sent to ${data.payeeName}`);
-          window.location.href = 'scanner.html';
-        }, 400);
+          processingOverlay.classList.remove('active');
+          successOverlay.style.display = 'flex';
+
+          setTimeout(() => {
+            successOverlay.style.display = 'none';
+            receiptPage.classList.add('active');
+          }, 2000);
+
+        }, 2025);
       }
     });
 
-    // Animation + keyboard
+    // Page load
     window.addEventListener('load', () => {
-      // Start slide-up immediately
-      requestAnimationFrame(() => {
-        pageContainer.classList.add('active');
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          pageContainer.classList.add('active');
+        });
+      }, 100);
+
+      const focusAttempts = [300, 500, 800, 1200, 1500, 2000];
+      focusAttempts.forEach(delay => {
+        setTimeout(() => {
+          pinInput.focus();
+          pinInput.click();
+          pinInput.setSelectionRange(0, 0);
+        }, delay);
       });
 
-      // Multiple attempts to open keyboard automatically
-      const tryFocus = () => {
-        pinInput.focus();
-        // Simulate click on hidden input for some browsers
-        pinInput.click();
-      };
+      document.addEventListener('touchstart', () => {
+        setTimeout(() => pinInput.focus(), 100);
+      }, { once: true });
 
-      setTimeout(tryFocus, 300);   // After animation starts
-      setTimeout(tryFocus, 700);   // During animation
-      setTimeout(tryFocus, 1200);  // After animation ends
+      document.addEventListener('keydown', (e) => {
+        if (e.key.match(/[0-9]/) && document.activeElement !== pinInput) {
+          pinInput.focus();
+        }
+      });
+    });
+
+    pinInput.addEventListener('focus', () => {
+      document.body.style.zoom = '0.99';
+      setTimeout(() => { document.body.style.zoom = ''; }, 100);
     });
 
     updateDots();
