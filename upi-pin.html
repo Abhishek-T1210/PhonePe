@@ -10,22 +10,30 @@
     html, body {
       height: 100%;
       overflow: hidden;
+      background: #f5f5f7; /* Prevent any white flash */
     }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f5f5f7;
-      position: relative;
     }
 
-    /* Slide-up drawer animation */
+    /* Start visible but at bottom, then slide up */
     .page-container {
-      position: absolute;
+      position: fixed;
       top: 100%;
       left: 0;
       right: 0;
-      bottom: 0;
+      height: 100%;
       background: #f5f5f7;
       transition: transform 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex;
+      flex-direction: column;
+      /* Hardware acceleration fixes to prevent flash/flicker */
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      -webkit-perspective: 1000;
+      perspective: 1000;
     }
     .page-container.active {
       transform: translateY(-100%);
@@ -39,6 +47,7 @@
       color: #666;
       border-bottom: 1px solid #eee;
       position: relative;
+      flex-shrink: 0;
     }
     .cancel-btn {
       position: absolute;
@@ -58,6 +67,7 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid #eee;
+      flex-shrink: 0;
     }
     .bank-details {
       display: flex;
@@ -86,6 +96,7 @@
       padding-bottom: 3px;
       font-size: 15px;
       color: #666;
+      flex-shrink: 0;
     }
     .details-label {
       color: #000000;
@@ -110,8 +121,9 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding-top: 100px; /* Plenty of space so nothing gets covered by keyboard */
+      padding-top: 100px;
       background: white;
+      min-height: 0; /* Important for flex */
     }
     .pin-title {
       font-size: 18px;
@@ -120,7 +132,7 @@
       margin-bottom: 60px;
     }
     .pin-dots-container {
-      margin-bottom: 90px; /* Extra margin to stay visible above keyboard */
+      margin-bottom: 90px;
       cursor: pointer;
     }
     .pin-dots {
@@ -168,7 +180,7 @@
       border-radius: 4px;
     }
 
-    /* Hidden input to trigger native numeric keypad */
+    /* Hidden input */
     #pin-input {
       position: absolute;
       left: -9999px;
@@ -223,7 +235,6 @@
     </div>
   </div>
 
-  <!-- Hidden input triggers native numeric keypad -->
   <input
     type="text"
     inputmode="numeric"
@@ -234,7 +245,6 @@
   />
 
   <script>
-    // Load payment data
     const data = JSON.parse(localStorage.getItem('upiPaymentData'));
     if (!data) {
       alert("No payment data found. Redirecting...");
@@ -248,28 +258,17 @@
     document.getElementById('warning-amount').textContent = '₹' + parseFloat(data.amount).toFixed(2);
     document.getElementById('warning-payee').textContent = data.payeeName.toUpperCase();
 
-    // PIN logic with native keypad
     let pin = '';
-    const dots = [
-      document.getElementById('dot1'),
-      document.getElementById('dot2'),
-      document.getElementById('dot3'),
-      document.getElementById('dot4')
-    ];
+    const dots = [document.getElementById('dot1'), document.getElementById('dot2'), document.getElementById('dot3'), document.getElementById('dot4')];
     const pinInput = document.getElementById('pin-input');
     const dotsContainer = document.getElementById('pin-dots-container');
     const pageContainer = document.getElementById('page-container');
 
     function updateDots() {
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('filled', i < pin.length);
-      });
+      dots.forEach((dot, i) => dot.classList.toggle('filled', i < pin.length));
     }
 
-    // Fallback: tap dots to focus
-    dotsContainer.onclick = () => {
-      pinInput.focus();
-    };
+    dotsContainer.onclick = () => pinInput.focus();
 
     pinInput.addEventListener('input', (e) => {
       pin = e.target.value.replace(/\D/g, '').slice(0, 4);
@@ -285,16 +284,26 @@
       }
     });
 
-    // Trigger slide-up animation + auto keyboard
+    // Animation + keyboard
     window.addEventListener('load', () => {
-      // Activate slide-up animation
-      pageContainer.classList.add('active');
+      // Start slide-up immediately
+      requestAnimationFrame(() => {
+        pageContainer.classList.add('active');
+      });
 
-      // Try to focus with delays (works on most Android & iOS devices)
-      setTimeout(() => pinInput.focus(), 100);
-      setTimeout(() => pinInput.focus(), 500);
-      setTimeout(() => pinInput.focus(), 1000);
+      // Multiple attempts to open keyboard automatically
+      const tryFocus = () => {
+        pinInput.focus();
+        // Simulate click on hidden input for some browsers
+        pinInput.click();
+      };
+
+      setTimeout(tryFocus, 300);   // After animation starts
+      setTimeout(tryFocus, 700);   // During animation
+      setTimeout(tryFocus, 1200);  // After animation ends
     });
+
+    updateDots();
   </script>
 </body>
 </html>
