@@ -713,5 +713,37 @@
 
     window.onload = startScanner;
   </script>
+  <!-- At the bottom, replace the existing final-pay-btn onclick -->
+<script>
+  // ... all your existing code ...
+
+  document.getElementById('final-pay-btn').onclick = function () {
+    const amount = currentAmount;
+    const payeeName = currentUpiData.pn;
+    const payeeUpi = currentUpiData.pa;
+
+    // Get selected bank
+    const selectedBankEl = document.querySelector('.bank-option .select-circle.selected');
+    if (!selectedBankEl) {
+      alert("Please select a bank account");
+      return;
+    }
+    const bankOption = selectedBankEl.closest('.bank-option');
+    const bankName = bankOption.querySelector('.bank-name').textContent.trim();
+    const accountMask = bankOption.querySelector('.bank-account-line').childNodes[0].textContent.trim(); // e.g., ••9577
+
+    // Save to localStorage for the PIN page
+    localStorage.setItem('upiPaymentData', JSON.stringify({
+      amount: amount,
+      payeeName: payeeName,
+      payeeUpi: payeeUpi,
+      bankName: bankName,
+      accountMask: accountMask.replace('••', 'XXXX') // Convert ••9577 → XXXX9577
+    }));
+
+    // Redirect to PIN page
+    window.location.href = 'upi-pin.html';
+  };
+</script>
 </body>
 </html>
