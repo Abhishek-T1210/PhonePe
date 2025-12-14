@@ -7,12 +7,28 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: #f5f5f7;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
+      position: relative;
+    }
+
+    /* Slide-up drawer animation */
+    .page-container {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #f5f5f7;
+      transition: transform 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .page-container.active {
+      transform: translateY(-100%);
     }
 
     .header {
@@ -94,19 +110,17 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding-top: 80px; /* Increased top padding so content stays visible above keyboard */
-      padding-bottom: 20px;
+      padding-top: 100px; /* Plenty of space so nothing gets covered by keyboard */
       background: white;
-      overflow-y: auto; /* Allows scrolling if needed on small screens */
     }
     .pin-title {
       font-size: 18px;
       font-weight: 600;
       color: #333;
-      margin-bottom: 50px; /* More space below title */
+      margin-bottom: 60px;
     }
     .pin-dots-container {
-      margin-bottom: 80px; /* Extra space below dots */
+      margin-bottom: 90px; /* Extra margin to stay visible above keyboard */
       cursor: pointer;
     }
     .pin-dots {
@@ -142,7 +156,7 @@
       flex-shrink: 0;
     }
     .warning-text {
-      font-size: 12px; /* Increased from 10px to make it readable */
+      font-size: 14px;
       color: #333;
       line-height: 1.5;
       text-align: left;
@@ -163,45 +177,48 @@
   </style>
 </head>
 <body>
-  <div class="header">
-    <span class="cancel-btn" onclick="window.location.href='scanner.html'">CANCEL</span>
-  </div>
 
-  <div class="bank-info">
-    <div class="bank-details">
-      <div class="bank-name" id="bank-name">Loading...</div>
-      <div class="account-number" id="account-number">XXXX0000</div>
+  <div class="page-container" id="page-container">
+    <div class="header">
+      <span class="cancel-btn" onclick="window.location.href='scanner.html'">CANCEL</span>
     </div>
-    <img src="upi.svg" alt="UPI Logo" class="upi-logo">
-  </div>
 
-  <div class="details-strip">
-    <span class="details-label">To:</span>
-    <span class="details-value" id="payee-name">Loading...<span class="dropdown-arrow">▼</span></span>
-  </div>
-
-  <div class="details-strip">
-    <span class="details-label">Sending:</span>
-    <span class="details-value" id="amount">₹0.00<span class="dropdown-arrow">▼</span></span>
-  </div>
-
-  <div class="pin-section">
-    <div class="pin-title">ENTER 4-DIGIT UPI PIN</div>
-
-    <div class="pin-dots-container" id="pin-dots-container">
-      <div class="pin-dots">
-        <div class="dot" id="dot1"></div>
-        <div class="dot" id="dot2"></div>
-        <div class="dot" id="dot3"></div>
-        <div class="dot" id="dot4"></div>
+    <div class="bank-info">
+      <div class="bank-details">
+        <div class="bank-name" id="bank-name">Loading...</div>
+        <div class="account-number" id="account-number">XXXX0000</div>
       </div>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/UPI_logo.svg" alt="UPI Logo" class="upi-logo">
     </div>
 
-    <div class="warning-box">
-      <div class="warning-icon">!</div>
-      <div class="warning-text">
-        You are SENDING <span class="highlight" id="warning-amount">₹0</span> from your account to<br>
-        <span class="highlight" id="warning-payee">Payee</span>
+    <div class="details-strip">
+      <span class="details-label">To:</span>
+      <span class="details-value" id="payee-name">Loading...<span class="dropdown-arrow">▼</span></span>
+    </div>
+
+    <div class="details-strip">
+      <span class="details-label">Sending:</span>
+      <span class="details-value" id="amount">₹0.00<span class="dropdown-arrow">▼</span></span>
+    </div>
+
+    <div class="pin-section">
+      <div class="pin-title">ENTER 4-DIGIT UPI PIN</div>
+
+      <div class="pin-dots-container" id="pin-dots-container">
+        <div class="pin-dots">
+          <div class="dot" id="dot1"></div>
+          <div class="dot" id="dot2"></div>
+          <div class="dot" id="dot3"></div>
+          <div class="dot" id="dot4"></div>
+        </div>
+      </div>
+
+      <div class="warning-box">
+        <div class="warning-icon">!</div>
+        <div class="warning-text">
+          You are SENDING <span class="highlight" id="warning-amount">₹0</span> from your account to<br>
+          <span class="highlight" id="warning-payee">Payee</span>
+        </div>
       </div>
     </div>
   </div>
@@ -241,6 +258,7 @@
     ];
     const pinInput = document.getElementById('pin-input');
     const dotsContainer = document.getElementById('pin-dots-container');
+    const pageContainer = document.getElementById('page-container');
 
     function updateDots() {
       dots.forEach((dot, i) => {
@@ -248,7 +266,7 @@
       });
     }
 
-    // Tap dots → opens native numeric keypad (fallback if auto-focus fails)
+    // Fallback: tap dots to focus
     dotsContainer.onclick = () => {
       pinInput.focus();
     };
@@ -267,11 +285,16 @@
       }
     });
 
-    // Auto-focus the hidden input when page loads → native numpad appears immediately
-    window.onload = () => {
-      pinInput.focus();
-      updateDots();
-    };
+    // Trigger slide-up animation + auto keyboard
+    window.addEventListener('load', () => {
+      // Activate slide-up animation
+      pageContainer.classList.add('active');
+
+      // Try to focus with delays (works on most Android & iOS devices)
+      setTimeout(() => pinInput.focus(), 100);
+      setTimeout(() => pinInput.focus(), 500);
+      setTimeout(() => pinInput.focus(), 1000);
+    });
   </script>
 </body>
 </html>
