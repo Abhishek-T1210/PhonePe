@@ -191,7 +191,7 @@
         </div>
     </div>
 
-    <!-- Dark overlay (for dimming background) -->
+    <!-- Dark overlay (dims background) -->
     <div id="drawer-overlay"></div>
 
     <!-- Full-screen drawer iframe for balance.html -->
@@ -241,8 +241,11 @@
                 }
             });
 
-            // When 4 digits entered → slide up full-screen balance.html
+            // When 4 digits entered → hide keyboard + slide up balance page
             if (pin.length === 4) {
+                // Immediately hide the phone's native numeric keypad
+                hiddenInput.blur();  // This removes focus and closes the keypad
+
                 setTimeout(() => {
                     // Load balance.html with parameters
                     drawer.src = 'balance.html?' + window.location.search.slice(1);
