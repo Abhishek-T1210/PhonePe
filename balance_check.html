@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Check Balance - PhonePe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FFFFFF;
+            overflow-x: hidden;
+        }
+
+        /* Hide scrollbar */
+        ::-webkit-scrollbar {
+            width: 0px;
+            height: 0px;
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: transparent;
+        }
+
+        html {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        body {
+            -ms-overflow-style: none;
+            overflow: -moz-scrollbars-none;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Desktop Block */
+        .desktop-block {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #68217A;
+            color: white;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 9999;
+            padding: 40px;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .desktop-block img {
+            width: 90px;
+            filter: brightness(0) invert(1);
+        }
+
+        @media (min-width: 768px) {
+            body>*:not(.desktop-block) {
+                display: none;
+            }
+
+            .desktop-block {
+                display: flex;
+            }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            padding: 12px;
+            padding-top: env(safe-area-inset-top, 44px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+            padding-top: 10px;
+        }
+
+        .back-btn {
+            font-size: 32px;
+            color: #000;
+            font-weight: 300;
+        }
+
+        .help-icon {
+            width: 26px;
+            height: 26px;
+            /* background: rgba(0, 0, 0, 0.08); */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #000;
+            border: 1px solid;
+        }
+
+        /* Main Content */
+        .content {
+            padding-top: calc(60px + env(safe-area-inset-top, 44px));
+            padding-left: 16px;
+            padding-right: 16px;
+            padding-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 16px;
+        }
+
+        /* WISH Card Banner */
+        .wish-banner {
+            background: #fff;
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .wish-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .wish-subtitle {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .wish-arrow {
+            font-size: 20px;
+            color: #000;
+        }
+
+        .wish-card-img {
+            width: 46px;
+            height: auto;
+        }
+
+        /* List Items (Flat List) */
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 0;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 16px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo img {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+        }
+
+        .details {
+            flex: 1;
+        }
+
+        .name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #777;
+            margin-top: 3px;
+        }
+
+        .arrow {
+            font-size: 18px;
+            color: #595858;
+            font-weight: 300;
+        }
+
+        .action {
+            color: #68217A;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Special Logos */
+        .upilite-logo {
+            background: #ffffff;
+        }
+
+        .add-logo {
+            background: #68217a25;
+            color: #68217A;
+            font-size: 24px;
+            border: 1px solid #68217A;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #add {
+               width: 38px;
+               height: 38px;
+               display: flex;
+               justify-content: center;
+               align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Desktop Block -->
+    <div class="desktop-block">
+        <img src="https://www.phonepe.com/web-static/img/phonepe_logo.svg" alt="PhonePe">
+        <h1>Desktop Not Supported</h1>
+        <p>Please open on your mobile phone</p>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="back-btn">←</div>
+        <div class="help-icon">?</div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h1 class="page-title">Check Balance</h1>
+
+        <!-- WISH Card Banner -->
+        <div class="wish-banner">
+            <div>
+                <div class="wish-text">Get your WISH Card <span class="wish-arrow">→</span></div>
+                <div class="wish-subtitle">3% cashback* on PhonePe spends</div>
+            </div>
+            <img class="wish-card-img" src="https://img.icons8.com/glyph-neue/64/credit-card-front.png" alt="WISH Card">
+        </div>
+
+        <!-- Flat List of Banks and Special Items -->
+        <div class="list-item">
+            <div class="logo">
+                <img src="hdfc icon.webp" alt="HDFC Bank">
+            </div>
+            <div class="details">
+                <div class="name">HDFC Bank - 9577</div>
+            </div>
+            <div class="arrow">></div>
+        </div>
+
+        <div class="list-item">
+            <div class="logo">
+                <img src="federal-bank-app-icon.webp" alt="Federal Bank">
+            </div>
+            <div class="details">
+                <div class="name">Federal Bank Credit Card - **79</div>
+                <div class="subtitle">RuPay Credit on UPI</div>
+            </div>
+            <div class="arrow">></div>
+        </div>
+
+        <div class="list-item">
+            <div class="logo">
+                <img src="axis.png" alt="Axis Bank">
+            </div>
+            <div class="details">
+                <div class="name">Axis Bank - 2696</div>
+            </div>
+            <div class="arrow">></div>
+        </div>
+
+        <div class="list-item">
+            <div class="logo">
+                <img src="saraswat.png" alt="Saraswat Bank">
+            </div>
+            <div class="details">
+                <div class="name">Saraswat Bank - 3493</div>
+            </div>
+            <div class="action">Set PIN</div>
+        </div>
+
+        <div class="list-item">
+            <div class="logo upilite-logo">
+                <img src="upi.svg" alt="UPI Lite">
+            </div>
+            <div class="details">
+                <div class="name">UPI Lite</div>
+                <div class="subtitle">Pin-less payments up to ₹1,000</div>
+            </div>
+            <div class="action">Try Now</div>
+        </div>
+
+        <div class="list-item">
+            <div id="add" class="logo add-logo">+</div>
+            <div class="details">
+                <div class="name">Add UPI account</div>
+                <div class="subtitle">RuPay card, bank account & more</div>
+            </div>
+            <div class="arrow">></div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
