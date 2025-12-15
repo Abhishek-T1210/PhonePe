@@ -103,7 +103,6 @@
         .help-icon {
             width: 26px;
             height: 26px;
-            /* background: rgba(0, 0, 0, 0.08); */
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -167,6 +166,8 @@
             display: flex;
             align-items: center;
             padding: 14px 0;
+            text-decoration: none;
+            color: inherit;
         }
 
         .list-item:last-child {
@@ -259,7 +260,7 @@
 
     <!-- Header -->
     <header class="header">
-        <div class="back-btn">←</div>
+        <div class="back-btn" onclick="history.back()">←</div>
         <div class="help-icon">?</div>
     </header>
 
@@ -277,7 +278,9 @@
         </div>
 
         <!-- Flat List of Banks and Special Items -->
-        <div class="list-item">
+
+        <!-- HDFC Bank -->
+        <a href="upi_pin.html?bank=HDFC%20Bank&short=XXXX9577&full=XXXXXXXXXX9577" class="list-item">
             <div class="logo">
                 <img src="hdfc icon.webp" alt="HDFC Bank">
             </div>
@@ -285,9 +288,10 @@
                 <div class="name">HDFC Bank - 9577</div>
             </div>
             <div class="arrow">></div>
-        </div>
+        </a>
 
-        <div class="list-item">
+        <!-- Federal Bank Credit Card -->
+        <a href="upi_pin.html?bank=Federal%20Bank&short=**79&full=**********79" class="list-item">
             <div class="logo">
                 <img src="federal-bank-app-icon.webp" alt="Federal Bank">
             </div>
@@ -296,9 +300,10 @@
                 <div class="subtitle">RuPay Credit on UPI</div>
             </div>
             <div class="arrow">></div>
-        </div>
+        </a>
 
-        <div class="list-item">
+        <!-- Axis Bank -->
+        <a href="upi_pin.html?bank=Axis%20Bank&short=XXXX2696&full=XXXXXXXXXX2696" class="list-item">
             <div class="logo">
                 <img src="axis.png" alt="Axis Bank">
             </div>
@@ -306,9 +311,10 @@
                 <div class="name">Axis Bank - 2696</div>
             </div>
             <div class="arrow">></div>
-        </div>
+        </a>
 
-        <div class="list-item">
+        <!-- Saraswat Bank (Set PIN) -->
+        <a href="upi_pin.html?bank=Saraswat%20Bank&short=XXXX3493&full=XXXXXXXXXX3493" class="list-item">
             <div class="logo">
                 <img src="saraswat.png" alt="Saraswat Bank">
             </div>
@@ -316,8 +322,9 @@
                 <div class="name">Saraswat Bank - 3493</div>
             </div>
             <div class="action">Set PIN</div>
-        </div>
+        </a>
 
+        <!-- UPI Lite (non-clickable) -->
         <div class="list-item">
             <div class="logo upilite-logo">
                 <img style="height: 16px;" src="upi.svg" alt="UPI Lite">
@@ -329,6 +336,7 @@
             <div class="action">Try Now</div>
         </div>
 
+        <!-- Add UPI account (non-clickable) -->
         <div class="list-item">
             <div id="add" class="logo add-logo">+</div>
             <div class="details">
