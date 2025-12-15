@@ -53,7 +53,7 @@
         /* Grey bar - ONLY the account number inside */
         .account-bar {
             background: #f0f0f0;
-           padding: 2px 8px 38px;
+           padding: 8px 8px 38px;
 
         }
         .account-number {
@@ -79,12 +79,12 @@
         .pin-dots {
             display: flex;
             justify-content: center;
-            gap: 24px;
-            margin-bottom: 120px;
+            gap: 20px;
+            margin-bottom: 74px;
         }
         .pin-dot {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             border: 2px solid #bbb;
             border-radius: 50%;
             background: transparent;
@@ -109,18 +109,18 @@
             height: 1px;
             width: 1px;
         }
-    </style>
+</style>
 </head>
 <body>
 
-    <!-- Hidden input to auto-trigger phone's numeric keypad -->
+    <!-- Hidden input to trigger phone's numeric keypad -->
     <input 
         type="text" 
         inputmode="numeric" 
         pattern="[0-9]*" 
         maxlength="4" 
         id="pin-input" 
-        autofocus 
+        autocomplete="off"
     />
 
     <!-- Header -->
@@ -142,8 +142,8 @@
         <div class="account-number" id="fullAcc">XXXXXXXXXX2071</div>
     </div>
 
-    <!-- PIN Section -->
-    <div class="pin-section">
+    <!-- PIN Section - Make this area clickable to trigger keyboard -->
+    <div class="pin-section" id="triggerArea">
         <div class="pin-title">Enter 4-digit UPI PIN</div>
         <div class="pin-dots">
             <div class="pin-dot"></div>
@@ -157,32 +157,39 @@
     </div>
 
     <script>
-        // Read URL parameters sent from balance_checker.html
+        // Read URL parameters
         const urlParams = new URLSearchParams(window.location.search);
-
         const bankName = urlParams.get('bank') || 'Federal Bank';
         const shortAcc = urlParams.get('short') || 'XXXX2071';
         const fullAcc = urlParams.get('full') || 'XXXXXXXXXX2071';
 
-        // Dynamically update the content
         document.getElementById('bankName').textContent = bankName;
         document.getElementById('shortAcc').textContent = shortAcc;
         document.getElementById('fullAcc').textContent = fullAcc;
 
-        // PIN handling (unchanged)
+        // PIN handling
         const dots = document.querySelectorAll('.pin-dot');
         const hiddenInput = document.getElementById('pin-input');
+        const triggerArea = document.getElementById('triggerArea');
         let pin = '';
 
+        // Focus hidden input when user taps on PIN area (this triggers keyboard reliably)
+        triggerArea.addEventListener('click', () => {
+            hiddenInput.focus();
+        });
+
+        // Also try auto-focus on load (works on some devices)
         window.addEventListener('load', () => {
             hiddenInput.focus();
         });
 
+        // Handle input from phone keypad
         hiddenInput.addEventListener('input', (e) => {
-            const value = e.target.value.replace(/\D/g, '');
+            const value = e.target.value.replace(/\D/g, ''); // Only digits
             pin = value.slice(0, 4);
             e.target.value = pin;
 
+            // Update dots
             dots.forEach((dot, index) => {
                 if (index < pin.length) {
                     dot.classList.add('filled');
@@ -191,10 +198,11 @@
                 }
             });
 
+            // Auto-submit when 4 digits entered
             if (pin.length === 4) {
                 setTimeout(() => {
                     alert('PIN submitted successfully: ' + pin);
-                    // You can redirect or send data further here
+                    // Add your real submission logic here
                 }, 300);
             }
         });
